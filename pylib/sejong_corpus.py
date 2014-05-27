@@ -2,10 +2,10 @@
 
 
 """
-Sejong corpus parser
+sejong corpus parser
 __author__      krikit
 __email__       krikit@naver.com
-__date__        creation: 2014-05-22, modification: 2014-05-28
+__date__        creation: 2014-05-27, modification: 2014-05-27
 __copyright__   nobody. feel free to use, copy and modify
 """
 
@@ -21,21 +21,27 @@ import re
 #############
 # constants #
 #############
-_WRITTEN_SENT_OPEN_TAGS = ['<head>', '<p>',]
+_WRITTEN_SENT_OPEN_TAGS = ['<head>', '<p>',]    # sentence open tags at written corpus
+# sentence close tags at written corpus
 _WRITTEN_SENT_CLOSE_TAGS = [tag[0] + '/' + tag[1:] for tag in _WRITTEN_SENT_OPEN_TAGS]
 
+# open tags in sentence at spoken corpus
 _OPEN_TAGS_IN_SPOKEN_SENT = [
   '<anchor', '<applauding', '<dia', '<event', '<kinesics', '<latching', '<laughing', '<note', '<pause',
   '<quotation', '<read', '<reading', '<singing', '<trunc', '<unclear', '<vocal',
 ]
+# close tags in sentence at spoken corpus
 _CLOSE_TAGS_IN_SPOKEN_SENT = [tag[0] + '/' + tag[1:] for tag in _OPEN_TAGS_IN_SPOKEN_SENT]
+# open and close tags in sentence at spoken corpus
 _TAGS_IN_SPOKEN_SENT = _OPEN_TAGS_IN_SPOKEN_SENT + _CLOSE_TAGS_IN_SPOKEN_SENT
 
-_OPEN_TAGS_IN_WRITTEN_SENT = set(['<date>',])
+_OPEN_TAGS_IN_WRITTEN_SENT = set(['<date>',])   # open tags in sentence at written corpus
+# close tags in sentence at written corpus
 _CLOSE_TAGS_IN_WRITTEN_SENT = set([tag[0] + '/' + tag[1:] for tag in _OPEN_TAGS_IN_WRITTEN_SENT])
+# open and close tags in sentence at written corpus
 _TAGS_IN_WRITTEN_SENT = _OPEN_TAGS_IN_WRITTEN_SENT | _CLOSE_TAGS_IN_WRITTEN_SENT
 
-_UNI_LINE_ID_PTN = re.compile(u'[0-9A-Z_]{4}\\d{4}-\\d{7,8}')
+_UNI_LINE_ID_PTN = re.compile(u'[0-9A-Z_]{4}\\d{4}-\\d{7,8}')   # line ID(?) pattern to cut off
 
 
 #########
@@ -43,14 +49,14 @@ _UNI_LINE_ID_PTN = re.compile(u'[0-9A-Z_]{4}\\d{4}-\\d{7,8}')
 #########
 class ParseError(Exception):
   """
-  error occured while parsing Sejong corpus
+  error occurred while parsing corpus
   """
   pass
 
 
 class Sentence(object):
   """
-  Sentence
+  sentence
   """
   def __init__(self):
     self.words = []   # word list
@@ -107,7 +113,7 @@ class Sentence(object):
 
 class Word(object):
   """
-  Word(EoJeol)
+  word(EoJeol)
   """
   def __init__(self):
     self.raw = ''   # raw word string
@@ -136,7 +142,7 @@ class Word(object):
     if len(cols) != 2:
       if Sentence.is_tag_in_sent(is_spoken, line):
         return None
-      raise ParseError('Invalid line(%d): %s' % (line_num, line))
+      raise ParseError('%s(%d) Invalid line: %s' % (file_name, line_num, line))
     if is_spoken:
       cols[0] = cls.clean_spoken(cols[0])
       cols[1] = ' + '.join(cols[1].split('+'))
@@ -145,8 +151,7 @@ class Word(object):
     try:
       word.morphs = [Morph.parse(word_tag) for word_tag in cols[1].split(' + ')]
     except ValueError, val_err:
-      logging.error('line: %s', line)
-      raise ParseError('%s(%d) %s' % (file_name, line_num, val_err))
+      raise ParseError('%s(%d) %s: %s' % (file_name, line_num, val_err, line))
     return word
 
   @classmethod
@@ -177,7 +182,7 @@ class Word(object):
 
 class Morph(object):
   """
-  Morpheme
+  morpheme
   """
   def __init__(self):
     self.lex = ''   # lexical form
@@ -203,7 +208,7 @@ class Morph(object):
 #############
 def load(is_spoken, paths):
   """
-  parse Sejong corpus and return sentences (generator)
+  parse corpus and return sentences (generator)
   @param  is_spoken   whether spoken corpus or not
   @param  paths       list of file paths
   @yield              Sentence object
