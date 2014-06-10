@@ -15,6 +15,7 @@ __copyright__   nobody. feel free to use, copy and modify
 # imports #
 ###########
 import argparse
+from collections import namedtuple
 import logging
 import sys
 
@@ -37,6 +38,12 @@ _JONG_TO_CHO = {
   u'ㄴ': u'\u11ab',
   u'ㄹ': u'\u11af',
 }
+
+
+#########
+# types #
+#########
+WordStrMorphsPair = namedtuple('WordStrMorphsPair', ['word_str', 'morphs'])
 
 
 #############
@@ -118,31 +125,31 @@ def match_sfx(uni_word, morphs):
   return -1, -1
 
 
-def log_not_aligned(word, forward_pairs, sandwitch_word, sandwitch_morphs, backward_pairs):
+def log_not_aligned(word, forward_pairs, sandwich_word, sandwich_morphs, backward_pairs):
   """
   logging not aligned word
   @param  word              word
   @param  forward_pairs     forward pairs
-  @param  sandwitch_word    sandwitch word
-  @param  sandwitch_morphs  sandwitch morphemes
+  @param  sandwich_word     sandwich word
+  @param  sandwich_morphs   sandwich morphemes
   @param  backward_pairs    backward pairs
   """
   if isinstance(word, unicode):
     word = word.encode('UTF-8')
-  if isinstance(sandwitch_word, unicode):
-    sandwitch_word = sandwitch_word.encode('UTF-8')
+  if isinstance(sandwich_word, unicode):
+    sandwich_word = sandwich_word.encode('UTF-8')
   logging.error('Not aligned word: [%s]', word)
   for word_str, morphs in forward_pairs:
     if isinstance(word_str, unicode):
       word_str = word_str.encode('UTF-8')
     morph_str = ' + '.join([str(morph) for morph in morphs])
     logging.error('  Forward:   [%s]\t%s', word_str, morph_str)
-  if sandwitch_word and sandwitch_morphs:
-    logging.error('  Sandwitch: [%s]\t%s', sandwitch_word, ' + '.join([str(morph) for morph in sandwitch_morphs]))
-  elif sandwitch_word:
-    logging.error('  SW Word:   [%s]', sandwitch_word)
+  if sandwich_word and sandwich_morphs:
+    logging.error('  Sandwitch: [%s]\t%s', sandwich_word, ' + '.join([str(morph) for morph in sandwich_morphs]))
+  elif sandwich_word:
+    logging.error('  SW Word:   [%s]', sandwich_word)
   else:
-    logging.error('  SW Morphs: %s', ' + '.join([str(morph) for morph in sandwitch_morphs]))
+    logging.error('  SW Morphs: %s', ' + '.join([str(morph) for morph in sandwich_morphs]))
   for word_str, morphs in backward_pairs:
     if isinstance(word_str, unicode):
       word_str = word_str.encode('UTF-8')
@@ -182,7 +189,7 @@ def main(fin_names, fout):
         word_match_len, morph_match_num = match_pfx(uni_word, morphs)
         if word_match_len == -1:
           break
-        forward_pairs.append((uni_word[:word_match_len], morphs[:morph_match_num]))
+        forward_pairs.append(WordStrMorphsPair(uni_word[:word_match_len], morphs[:morph_match_num]))
         uni_word = uni_word[word_match_len:]
         morphs = morphs[morph_match_num:]
       backward_pairs = []
@@ -190,13 +197,14 @@ def main(fin_names, fout):
         word_match_len, morph_match_num = match_sfx(uni_word, morphs)
         if word_match_len == -1:
           break
-        backward_pairs.insert(0, (uni_word[-word_match_len:], morphs[-morph_match_num:]))
+        backward_pairs.insert(0, WordStrMorphsPair(uni_word[-word_match_len:], morphs[-morph_match_num:]))
         uni_word = uni_word[:-word_match_len]
         morphs = morphs[:-morph_match_num]
-      sandwitch_pairs = []
+      sandwich_pairs = []
       if uni_word and morphs:
         if len(uni_word) == 1 or len(morphs) == 1:
-          sandwitch_pairs.append((uni_word, morphs))
+          # 남은 글자가 하나이거나 남은 형태소가 하나인 경우
+          sandwich_pairs.append(WordStrMorphsPair(uni_word, morphs))
         else:
           log_not_aligned(word.raw, forward_pairs, uni_word, morphs, backward_pairs)
           continue
@@ -204,9 +212,45 @@ def main(fin_names, fout):
         log_not_aligned(word.raw, forward_pairs, uni_word, morphs, backward_pairs)
         continue
       elif morphs:
-        log_not_aligned(word.raw, forward_pairs, uni_word, morphs, backward_pairs)
-        continue
-      print_aligned(fout, forward_pairs + sandwitch_pairs + backward_pairs)
+        if not backward_pairs:
+          forward_pairs[-1].morphs.extend(morphs)
+          del morphs[:]
+        elif len(morphs) == 1:
+          morph = morphs[0]
+          morph_str = str(morph)
+          if morph_str in ['이/VCP', '하/VX'] and backward_pairs[0].morphs[0].tag.startswith('E'):
+            # '이' 긍정지정사나 '하' 보조용언 뒤에 어미가 나올 경우
+            backward_pairs[0].morphs.insert(0, morphs[0])
+            del morphs[:]
+          elif morph_str == '에/JKB' and backward_pairs[0].morphs[0].tag == 'JX':
+            # '에' 부사격조사 뒤에 보조사가 나올 경우
+            backward_pairs[0].morphs.insert(0, morphs[0])
+            del morphs[:]
+          elif morph_str == 'ᆯ/ETM' and forward_pairs[-1].morphs[-1].tag.startswith('V'):
+            # 'ㄹ' 관형형전성어미 앞에 용언이 나올 경우
+            forward_pairs[-1].morphs.append(morphs[0])
+            del morphs[:]
+          elif morph.tag in ['EC', 'EF'] and forward_pairs[-1].morphs[-1].tag.startswith('V'):
+            # 연결어미나 종결어미 앞에 용언이 나올 경우
+            forward_pairs[-1].morphs.append(morphs[0])
+            del morphs[:]
+          elif morph.tag.startswith('XS'):
+            # 접미사는 앞에 붙여준다.
+            forward_pairs[-1].morphs.append(morphs[0])
+            del morphs[:]
+          else:
+            log_not_aligned(word.raw, forward_pairs, uni_word, morphs, backward_pairs)
+            continue
+        else:
+          morphs_str = ' + '.join([str(morph) for morph in morphs])
+          if morphs_str == '(/SS + 대북/NNG + (/SS + 대북/NNG + )/SS + )/SS' and forward_pairs[-1].word_str == u'대북':
+            del morphs[:]
+          elif morphs_str == '(/SS + 동경/NNP + )/SS' and forward_pairs[-1].word_str == u'도쿄':
+            del morphs[:]
+          else:
+            log_not_aligned(word.raw, forward_pairs, uni_word, morphs, backward_pairs)
+            continue
+      print_aligned(fout, forward_pairs + sandwich_pairs + backward_pairs)
 
 
 if __name__ == '__main__':
