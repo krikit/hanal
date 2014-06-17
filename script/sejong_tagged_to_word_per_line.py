@@ -2,13 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
-"""
-make word(EoJeol) per line formatted corpus from Sejong tagged corpus
-__author__      krikit
-__email__       krikit@naver.com
-__date__        creation: 2014-05-22, modification: 2014-05-27
-__copyright__   nobody. feel free to use, copy and modify
-"""
+"""make word(EoJeol) per line formatted corpus from Sejong tagged corpus"""
+__author__ = 'krikit'
+__email__ = 'krikit@naver.com'
+__date__ = 'creation: 2014-05-22, modification: 2014-05-27'
+__copyright__ = 'nobody. feel free to use, copy and modify'
 
 
 ###########
