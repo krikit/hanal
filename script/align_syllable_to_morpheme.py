@@ -5,7 +5,7 @@
 """align syllables to morphemes in word(EoJeol)"""
 __author__ = 'krikit'
 __email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-05-27, modification: 2014-05-27'
+__date__ = 'creation: 2014-05-27, modification: 2014-07-31'
 __copyright__ = 'nobody. feel free to use, copy and modify'
 
 
@@ -31,15 +31,15 @@ IS_SPOKEN = False
 #############
 def print_aligned(fout, pairs):
   """
-  print aligned (word, morpheme) pairs
+  print aligned (surface, morpheme) pairs
   @param  fout   output file
-  @param  pairs  (word, morpheme) pairs
+  @param  pairs  (surface, morpheme) pairs
   """
-  for word, morphs in pairs:
-    if isinstance(word, unicode):
-      word = word.encode('UTF-8')
+  for surface, morphs in pairs:
+    if isinstance(surface, unicode):
+      surface = surface.encode('UTF-8')
     morphs_str = ' + '.join([str(morph) for morph in morphs])
-    print >> fout, '%s\t%s' % (word, morphs_str)
+    print >> fout, '%s\t%s' % (surface, morphs_str)
 
 
 ########
@@ -53,10 +53,9 @@ def main(fin_names, fout):
   """
   for sent in sejong_corpus.load(IS_SPOKEN, fin_names):
     sent_pairs = []
-    for word in sent.words:
-      # logging.debug(word)
+    for surface in sent.words:
       try:
-        word_pairs = sejong_align.align(word)
+        word_pairs = sejong_align.align(surface)
       except sejong_align.AlignError:
         sent_pairs = []
         break

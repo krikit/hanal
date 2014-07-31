@@ -5,7 +5,7 @@
 """align syllables to morphemes in word(EoJeol)"""
 __author__ = 'krikit'
 __email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-06-17, modification: 2014-07-07'
+__date__ = 'creation: 2014-06-17, modification: 2014-07-31'
 __copyright__ = 'nobody. feel free to use, copy and modify'
 
 
@@ -311,7 +311,6 @@ def proc_sw_both_not_empty(forward_pairs, uni_word, morphs, backward_pairs):
   word_morphs_str = '%s %s' % (uni_word.encode('UTF-8'), morphs_str)
   if word_morphs_str in _CORRECT_ALIGNS:
     sandwich_pairs.append(WordStrMorphsPair(uni_word, morphs))
-    del morphs[:]
   elif word_morphs_str in ['해야 하/VV + 아야/EC + 하/VX', '해야 하/XSV + 아야/EC + 하/VX', '야 아야/EC + 하/VX',
       '야 어야/EC + 하/VX', '봐야 보/VX + 아야/EC + 하/VX', '해야 하/VX + 아야/EC + 하/VX'] \
       and backward_pairs and str(backward_pairs[0].morphs[0]) == '겠/EP':
@@ -357,7 +356,6 @@ def proc_sw_both_not_empty(forward_pairs, uni_word, morphs, backward_pairs):
     if sim >= _SIMILARITY_MIN:
       # string similarity is greater than threshold
       sandwich_pairs.append(WordStrMorphsPair(uni_word, morphs))
-      del morphs[:]
     else:
       raise AlignError()
   return sandwich_pairs
@@ -397,7 +395,6 @@ def proc_sw_only_morphs(forward_pairs, morphs, backward_pairs):
   sandwich_pairs = []
   if not backward_pairs:
     forward_pairs[-1].morphs.extend(morphs)
-    del morphs[:]
   elif len(morphs) == 1:
     morph = morphs[0]
     morph_str = str(morph)
