@@ -5,7 +5,7 @@
 """make training format for CRFsuite"""
 __author__ = 'krikit'
 __email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-07-31, modification: 2014-10-30'
+__date__ = 'creation: 2014-07-31, modification: 2014-11-04'
 __copyright__ = 'nobody. feel free to use, copy and modify'
 
 
@@ -136,6 +136,9 @@ def main(fin_names, fout_name, split_num):
     sizes = [0]
 
   for sent in sejong_corpus.load(IS_SPOKEN, fin_names):
+    if not sent.is_good_tags():
+      logging.error('Invalid tag in sentence: %s', sent)
+      continue
     sent_pairs = []
     for word in sent.words:
       try:

@@ -4,7 +4,7 @@
 """sejong corpus parser"""
 __author__ = 'krikit'
 __email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-05-27, modification: 2014-05-27'
+__date__ = 'creation: 2014-05-27, modification: 2014-11-04'
 __copyright__ = 'nobody. feel free to use, copy and modify'
 
 
@@ -19,6 +19,16 @@ import re
 #############
 # constants #
 #############
+TAG_SET = set([    # sejong tag set
+  'NNG', 'NNP', 'NNB', 'NP', 'NR',    # 체언
+  'VV', 'VA', 'VX', 'VCP', 'VCN',    # 용언
+  'MM', 'MAG', 'MAJ',    # 수식언
+  'IC',    # 독립언
+  'JKS', 'JKC', 'JKG', 'JKO', 'JKB', 'JKV', 'JKQ', 'JX', 'JC',    # 관계언
+  'EP', 'EF', 'EC', 'ETN', 'ETM', 'XPN', 'XSN', 'XSV', 'XSA', 'XR',    # 의존형태
+  'SF', 'SP', 'SS', 'SE', 'SO', 'SL', 'SH', 'SW', 'SN',    # 기호
+  'NF', 'NV', 'NA',    # 추정, 분석불능
+])
 _WRITTEN_SENT_OPEN_TAGS = ['<head>', '<p>',]    # sentence open tags at written corpus
 # sentence close tags at written corpus
 _WRITTEN_SENT_CLOSE_TAGS = [tag[0] + '/' + tag[1:] for tag in _WRITTEN_SENT_OPEN_TAGS]
@@ -107,6 +117,13 @@ class Sentence(object):
       return False
     else:
       return line in _TAGS_IN_WRITTEN_SENT
+
+  def is_good_tags(self):
+    """
+    whether all tags in sentence are good(correct) or not
+    @return  whether all tags are good
+    """
+    return not [morph.tag for word in self.words for morph in word.morphs if morph.tag not in TAG_SET]
 
 
 class Word(object):
@@ -198,6 +215,8 @@ class Morph(object):
     """
     morph = Morph()
     morph.lex, morph.tag = token_str.rsplit('/', 1)
+    if morph.tag not in TAG_SET:
+      logging.error('Invalid tag: %s in %s' % (morph.tag, token_str))
     return morph
 
 
