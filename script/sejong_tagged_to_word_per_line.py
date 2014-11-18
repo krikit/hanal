@@ -5,8 +5,8 @@
 """make word(EoJeol) per line formatted corpus from Sejong tagged corpus"""
 __author__ = 'krikit'
 __email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-05-22, modification: 2014-05-27'
-__copyright__ = 'nobody. feel free to use, copy and modify'
+__date__ = 'creation: 2014-05-22, modification: 2014-11-18'
+__copyright__ = 'Copyright (C) 2014, krikit. All rights reserved. BSD 2-Clause License'
 
 
 ###########

@@ -5,8 +5,8 @@
 """make training format for CRFsuite"""
 __author__ = 'krikit'
 __email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-07-31, modification: 2014-11-04'
-__copyright__ = 'nobody. feel free to use, copy and modify'
+__date__ = 'creation: 2014-07-31, modification: 2014-11-18'
+__copyright__ = 'Copyright (C) 2014, krikit. All rights reserved. BSD 2-Clause License'
 
 
 ###########
@@ -16,6 +16,7 @@ import argparse
 import logging
 import random
 
+import hangul
 import sejong_align
 import sejong_corpus
 
@@ -90,8 +91,20 @@ def print_aligned(fout, sent_pairs):
         features = []
         features.append('L_0=%s' % morph.lex)    # current morpheme
         features.append('S_0=%s' % surface)    # current surface
+        morph_uni = unicode(morph.lex, 'UTF-8')
+        if hangul.ishangul(morph_uni[0]):
+          initial_consonant = hangul.split(morph_uni[0])[0]
+          if initial_consonant and initial_consonant != u'ㅇ':
+            features.append('CIC')    # current initial consonant
+            logging.debug(u'Current Initial Consonant: (%s)%s', initial_consonant, morph_uni)
         if prev_morph:
           features.append('L-1=%s' % prev_morph.lex)    # previous morpheme
+          prev_morph_uni = unicode(prev_morph.lex, 'UTF-8')
+          if hangul.ishangul(prev_morph_uni[-1]):
+            final_consonant = hangul.split(prev_morph_uni[-1])[-1]
+            if final_consonant:
+              features.append('PFC')    # previous final consonant
+              logging.debug(u'Previous Final Consonant: %s(%s)', prev_morph_uni, final_consonant)
         else:
           features.append('BOS')   # begin of sentence
         if next_morph:
