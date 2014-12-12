@@ -5,7 +5,7 @@
 """make training format for CRFsuite"""
 __author__ = 'krikit'
 __email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-07-31, modification: 2014-11-18'
+__date__ = 'creation: 2014-07-31, modification: 2014-12-12'
 __copyright__ = 'Copyright (C) 2014, krikit. All rights reserved. BSD 2-Clause License'
 
 
@@ -103,7 +103,10 @@ def print_aligned(fout, sent_pairs):
           if hangul.ishangul(prev_morph_uni[-1]):
             final_consonant = hangul.split(prev_morph_uni[-1])[-1]
             if final_consonant:
-              features.append('PFC')    # previous final consonant
+              pfc = 'PFC'
+              if final_consonant == u'ㄹ':
+                pfc += '=ㄹ'
+              features.append(pfc)    # previous final consonant
               logging.debug(u'Previous Final Consonant: %s(%s)', prev_morph_uni, final_consonant)
         else:
           features.append('BOS')   # begin of sentence
