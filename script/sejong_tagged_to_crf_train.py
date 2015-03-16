@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
-"""make training format for CRFsuite"""
-__author__ = 'krikit'
-__email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-07-31, modification: 2014-12-12'
-__copyright__ = 'Copyright (C) 2014, krikit. All rights reserved. BSD 2-Clause License'
+"""
+make training format for CRFsuite
+"""
+__author__ = 'krikit(krikit@naver.com)'
+__copyright__ = 'Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Clause License'
 
 
 ###########

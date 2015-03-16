@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-"""sejong corpus parser"""
-__author__ = 'krikit'
-__email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-05-27, modification: 2014-11-18'
-__copyright__ = 'Copyright (C) 2014, krikit. All rights reserved. BSD 2-Clause License'
+"""
+sejong corpus parser
+"""
+__author__ = 'krikit(krikit@naver.com)'
+__copyright__ = 'Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Clause License'
 
 
 ###########

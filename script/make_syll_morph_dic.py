@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
-"""make syllable-morpheme TRIE dictionary"""
-__author__ = 'krikit'
-__email__ = 'krikit@naver.com'
-__date__ = 'creation: 2014-12-19, modification: 2014-12-19'
-__copyright__ = 'Copyright (C) 2014, krikit. All rights reserved. BSD 2-Clause License'
+"""
+make syllable-morpheme TRIE dictionary
+"""
+__author__ = 'krikit(krikit@naver.com)'
+__copyright__ = 'Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Clause License'
 
 
 ###########
