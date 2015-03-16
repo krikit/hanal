@@ -44,13 +44,13 @@ if __name__ == '__main__':
   _PARSER.add_argument('input', help='input files', metavar='FILE', nargs='+')
   _PARSER.add_argument('--is-spoken', help='whether spoken corpus or not', action='store_true')
   _PARSER.add_argument('--output', help='output file <default: stdout>', metavar='FILE',
-      type=argparse.FileType('w'), default=sys.stdout)
+                       type=argparse.FileType('w'), default=sys.stdout)
   _PARSER.add_argument('--log-level', help='set logging level', metavar='LEVEL')
   _PARSER.add_argument('--log-file', help='set log file <default: stderr>', metavar='FILE')
   _ARGS = _PARSER.parse_args()
   _LOG_CFG = {'format':'[%(asctime)-15s] %(levelname)-8s %(message)s', 'datefmt':'%Y-%m-%d %H:%M:%S'}
   if _ARGS.log_level:
-    _LOG_CFG['level'] = eval('logging.%s' % _ARGS.log_level.upper())
+    _LOG_CFG['level'] = eval('logging.%s' % _ARGS.log_level.upper())    # pylint: disable=W0123
   if _ARGS.log_file:
     _LOG_CFG['filename'] = _ARGS.log_file
   logging.basicConfig(**_LOG_CFG)    # pylint: disable=W0142

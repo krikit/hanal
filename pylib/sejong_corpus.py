@@ -20,14 +20,14 @@ import re
 # constants #
 #############
 TAG_SET = set([    # sejong tag set
-  'NNG', 'NNP', 'NNB', 'NP', 'NR',    # 체언
-  'VV', 'VA', 'VX', 'VCP', 'VCN',    # 용언
-  'MM', 'MAG', 'MAJ',    # 수식언
-  'IC',    # 독립언
-  'JKS', 'JKC', 'JKG', 'JKO', 'JKB', 'JKV', 'JKQ', 'JX', 'JC',    # 관계언
-  'EP', 'EF', 'EC', 'ETN', 'ETM', 'XPN', 'XSN', 'XSV', 'XSA', 'XR',    # 의존형태
-  'SF', 'SP', 'SS', 'SE', 'SO', 'SL', 'SH', 'SW', 'SN',    # 기호
-  'NF', 'NV', 'NA',    # 추정, 분석불능
+    'NNG', 'NNP', 'NNB', 'NP', 'NR',    # 체언
+    'VV', 'VA', 'VX', 'VCP', 'VCN',    # 용언
+    'MM', 'MAG', 'MAJ',    # 수식언
+    'IC',    # 독립언
+    'JKS', 'JKC', 'JKG', 'JKO', 'JKB', 'JKV', 'JKQ', 'JX', 'JC',    # 관계언
+    'EP', 'EF', 'EC', 'ETN', 'ETM', 'XPN', 'XSN', 'XSV', 'XSA', 'XR',    # 의존형태
+    'SF', 'SP', 'SS', 'SE', 'SO', 'SL', 'SH', 'SW', 'SN',    # 기호
+    'NF', 'NV', 'NA',    # 추정, 분석불능
 ])
 _WRITTEN_SENT_OPEN_TAGS = ['<head>', '<p>',]    # sentence open tags at written corpus
 # sentence close tags at written corpus
@@ -35,8 +35,8 @@ _WRITTEN_SENT_CLOSE_TAGS = [tag[0] + '/' + tag[1:] for tag in _WRITTEN_SENT_OPEN
 
 # open tags in sentence at spoken corpus
 _OPEN_TAGS_IN_SPOKEN_SENT = [
-  '<anchor', '<applauding', '<dia', '<event', '<kinesics', '<latching', '<laughing', '<note', '<pause',
-  '<quotation', '<read', '<reading', '<singing', '<trunc', '<unclear', '<vocal',
+    '<anchor', '<applauding', '<dia', '<event', '<kinesics', '<latching', '<laughing', '<note', '<pause',
+    '<quotation', '<read', '<reading', '<singing', '<trunc', '<unclear', '<vocal',
 ]
 # close tags in sentence at spoken corpus
 _CLOSE_TAGS_IN_SPOKEN_SENT = [tag[0] + '/' + tag[1:] for tag in _OPEN_TAGS_IN_SPOKEN_SENT]
@@ -216,7 +216,7 @@ class Morph(object):
     morph = Morph()
     morph.lex, morph.tag = token_str.rsplit('/', 1)
     if morph.tag not in TAG_SET:
-      logging.error('Invalid tag: %s in %s' % (morph.tag, token_str))
+      logging.error('Invalid tag: %s in %s', morph.tag, token_str)
     return morph
 
 
