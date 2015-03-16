@@ -32,8 +32,8 @@ IS_SPOKEN = False
 def print_aligned(fout, pairs):
   """
   print aligned (surface, morpheme) pairs
-  @param  fout   output file
-  @param  pairs  (surface, morpheme) pairs
+  :param  fout:   output file
+  :param  pairs:  (surface, morpheme) pairs
   """
   for surface, morphs in pairs:
     if isinstance(surface, unicode):
@@ -48,8 +48,8 @@ def print_aligned(fout, pairs):
 def main(fin_names, fout):
   """
   align syllables to morphemes in word(EoJeol)
-  @param  fin_names   list of input files
-  @param  fout    output file
+  :param  fin_names:   list of input files
+  :param  fout:        output file
   """
   for sent in sejong_corpus.load(IS_SPOKEN, fin_names):
     sent_pairs = []

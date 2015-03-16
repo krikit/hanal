@@ -134,8 +134,8 @@ class AlignError(Exception):
 def decompose(uni_word):
   """
   decompose syllables into consonants and vowels
-  @param  uni_word  word
-  @return           decomposed word
+  :param    uni_word:  word
+  :return:             decomposed word
   """
   if isinstance(uni_word, str):
     uni_word = unicode(uni_word, 'UTF-8')
@@ -151,8 +151,8 @@ def decompose(uni_word):
 def to_hex(text):
   """
   to hex code string
-  @param  text  text
-  @return       hex coded string
+  :param    text:  text
+  :return:         hex coded string
   """
   return ' '.join([hex(ord(char)) for char in unicode(text, 'UTF-8')])
 
@@ -160,9 +160,9 @@ def to_hex(text):
 def match_pfx(uni_word, morphs):
   """
   try to match with word prefix and head of morpheme list
-  @param  uni_word  unicode word
-  @param  morphs    morpheme list
-  @return           (match character length in word, match morpheme number in morpheme list) tuple
+  :param    uni_word:  unicode word
+  :param    morphs:    morpheme list
+  :return:             (match character length in word, match morpheme number in morpheme list) tuple
   """
   uni_morph = unicode(morphs[0].lex, 'UTF-8')
   if uni_word.startswith(uni_morph):    # just one morpheme starts with word
@@ -191,9 +191,9 @@ def match_pfx(uni_word, morphs):
 def match_sfx(uni_word, morphs):
   """
   try to match with word suffix and last of morpheme list
-  @param  uni_word  unicode word
-  @param  morphs    morpheme list
-  @return           (match character length in word, match morpheme number in morpheme list) tuple
+  :param    uni_word:  unicode word
+  :param    morphs     morpheme list
+  :return:             (match character length in word, match morpheme number in morpheme list) tuple
   """
   uni_morph = unicode(morphs[-1].lex, 'UTF-8')
   if uni_word.endswith(uni_morph):    # just one morpheme ends with word
@@ -215,11 +215,11 @@ def match_sfx(uni_word, morphs):
 def log_not_aligned(word, forward_pairs, sandwich_word, sandwich_morphs, backward_pairs):
   """
   logging not aligned word
-  @param  word              word
-  @param  forward_pairs     forward pairs
-  @param  sandwich_word     sandwich word
-  @param  sandwich_morphs   sandwich morphemes
-  @param  backward_pairs    backward pairs
+  :param  word:             word
+  :param  forward_pairs:    forward pairs
+  :param  sandwich_word:    sandwich word
+  :param  sandwich_morphs:  sandwich morphemes
+  :param  backward_pairs:   backward pairs
   """
   if isinstance(word, unicode):
     word = word.encode('UTF-8')
@@ -247,10 +247,10 @@ def log_not_aligned(word, forward_pairs, sandwich_word, sandwich_morphs, backwar
 def forward_search(forward_pairs, uni_word, morphs):
   """
   search from the beginning
-  @param  forward_pairs   pair list to put
-  @param  uni_word        word
-  @param  morphs          morpheme list
-  @return                 remaining (uni_word, morphs) pair
+  :param    forward_pairs:  pair list to put
+  :param    uni_word:       word
+  :param    morphs:         morpheme list
+  :return:                  remaining (uni_word, morphs) pair
   """
   while uni_word and morphs:
     word_match_len, morph_match_num = match_pfx(uni_word, morphs)
@@ -265,10 +265,10 @@ def forward_search(forward_pairs, uni_word, morphs):
 def backward_search(backward_pairs, uni_word, morphs):
   """
   search from the end
-  @param  backward_pairs  pair list to put
-  @param  uni_word        word
-  @param  morphs          morpheme list
-  @return                 remaining (uni_word, morphs) pair
+  :param    backward_pairs:  pair list to put
+  :param    uni_word:        word
+  :param    morphs:          morpheme list
+  :return:                   remaining (uni_word, morphs) pair
   """
   while uni_word and morphs:
     word_match_len, morph_match_num = match_sfx(uni_word, morphs)
@@ -283,9 +283,9 @@ def backward_search(backward_pairs, uni_word, morphs):
 def calc_similarity(lhs, rhs):
   """
   calculate similarity based on edit distance
-  @param  lhs   left hand side
-  @param  rhs   right hand side
-  @return       similarity
+  :param    lhs:  left hand side
+  :param    rhs:  right hand side
+  :return:        similarity
   """
   lhs_decomp = decompose(lhs)
   rhs_decomp = decompose(rhs)
@@ -300,11 +300,11 @@ def calc_similarity(lhs, rhs):
 def proc_sw_both_not_empty(forward_pairs, uni_word, morphs, backward_pairs):
   """
   process sandwich(remaining) (word, morphs) pair when both word and morpheme list are not empty
-  @param  forward_pairs   forward pair list
-  @param  uni_word        word
-  @param  morphs          morpheme list
-  @param  backward_pairs  backward pair list
-  @return                 sandwich pair list. AlignError raised when error occurs
+  :param    forward_pairs:   forward pair list
+  :param    uni_word:        word
+  :param    morphs:          morpheme list
+  :param    backward_pairs:  backward pair list
+  :return:                   sandwich pair list. AlignError raised when error occurs
   """
   sandwich_pairs = []
   morphs_str = ' + '.join([str(morph) for morph in morphs])
@@ -364,11 +364,11 @@ def proc_sw_both_not_empty(forward_pairs, uni_word, morphs, backward_pairs):
 def proc_sw_only_word(word, forward_pairs, uni_word, backward_pairs):
   """
   process sandwich(remaining) (word, morphs) pair when word is empty and only single morpheme is left
-  @param  word            sejong.Word object
-  @param  forward_pairs   forward pair list
-  @param  uni_word        word
-  @param  backward_pairs  backward pair list
-  @return                 sandwich pair list. AlignError raised when error occurs
+  :param    word:            sejong.Word object
+  :param    forward_pairs:   forward pair list
+  :param    uni_word:        word
+  :param    backward_pairs:  backward pair list
+  :return:                   sandwich pair list. AlignError raised when error occurs
   """
   sandwich_pairs = []
   if uni_word == u'.' and word.raw.endswith('.'):
@@ -387,10 +387,10 @@ def proc_sw_only_word(word, forward_pairs, uni_word, backward_pairs):
 def proc_sw_only_morphs(forward_pairs, morphs, backward_pairs):
   """
   process sandwich(remaining) (word, morphs) pair when word is empty and only single morpheme is left
-  @param  forward_pairs   forward pair list
-  @param  morphs          morpheme list
-  @param  backward_pairs  backward pair list
-  @return                 sandwich pair list. AlignError raised when error occurs
+  :param    forward_pairs:   forward pair list
+  :param    morphs:          morpheme list
+  :param    backward_pairs:  backward pair list
+  :return:                   sandwich pair list. AlignError raised when error occurs
   """
   sandwich_pairs = []
   if not backward_pairs:
@@ -434,12 +434,12 @@ def proc_sw_only_morphs(forward_pairs, morphs, backward_pairs):
 def proc_sandwich(word, forward_pairs, uni_word, morphs, backward_pairs):
   """
   process sandwich(remaining) (word, morphs) pair
-  @param  word            sejong.Word object
-  @param  forward_pairs   forward pair list
-  @param  uni_word        word
-  @param  morphs          morpheme list
-  @param  backward_pairs  backward pair list
-  @return                 sandwich pair list. AlignError raised when error occurs
+  :param    word:            sejong.Word object
+  :param    forward_pairs:   forward pair list
+  :param    uni_word:        word
+  :param    morphs:          morpheme list
+  :param    backward_pairs:  backward pair list
+  :return:                   sandwich pair list. AlignError raised when error occurs
   """
   sandwich_pairs = []
   if uni_word and morphs:
@@ -454,8 +454,8 @@ def proc_sandwich(word, forward_pairs, uni_word, morphs, backward_pairs):
 def align(word):
   """
   align syllables to morphemes in word(EoJeol)
-  @param  word  sejong.Word object
-  @return       WordStrMorphsPair list. AlignError raised when error occurs
+  :param    word:  sejong.Word object
+  :return:         WordStrMorphsPair list. AlignError raised when error occurs
   """
   uni_word = unicode(word.raw, 'UTF-8')
   morphs = word.morphs

@@ -78,9 +78,9 @@ class Sentence(object):
   def is_opening(cls, is_spoken, line):
     """
     whether sentence opening or not
-    @param  is_spken  whether is spoken
-    @param  line      unicode line
-    @return           whether opening or not
+    :param    is_spken:  whether is spoken
+    :param    line:      unicode line
+    :return:             whether opening or not
     """
     if is_spoken:
       return line.startswith('<s ')
@@ -91,9 +91,9 @@ class Sentence(object):
   def is_closing(cls, is_spoken, line):
     """
     whether sentence closing or not
-    @param  is_spken  whether is spoken
-    @param  line      unicode line
-    @return           whether closing or not
+    :param    is_spken:  whether is spoken
+    :param    line:      unicode line
+    :return:             whether closing or not
     """
     if is_spoken:
       return line.startswith('</s>')
@@ -104,9 +104,9 @@ class Sentence(object):
   def is_tag_in_sent(cls, is_spoken, line):
     """
     whether tag in sentence or not
-    @param  is_spken  whether is spoken
-    @param  line      unicode line
-    @return           whether tag or not
+    :param    is_spken:  whether is spoken
+    :param    line:      unicode line
+    :return:             whether tag or not
     """
     if is_spoken:
       if line[0] != '<':
@@ -121,7 +121,7 @@ class Sentence(object):
   def is_good_tags(self):
     """
     whether all tags in sentence are good(correct) or not
-    @return  whether all tags are good
+    :return:  whether all tags are good
     """
     return not [morph.tag for word in self.words for morph in word.morphs if morph.tag not in TAG_SET]
 
@@ -140,7 +140,7 @@ class Word(object):
   def raw_str(self):
     """
     return raw string instead of word per line format
-    @return   raw word
+    :return:  raw word
     """
     return self.raw
 
@@ -148,10 +148,10 @@ class Word(object):
   def parse(cls, is_spoken, line, file_name, line_num):
     """
     parse word(EoJeol) with single line
-    @param  is_spoken   whether is spoken
-    @param  line        unicode line
-    @param  file_name   file name
-    @param  line_num    line number
+    :param  is_spoken:  whether is spoken
+    :param  line:       unicode line
+    :param  file_name:  file name
+    :param  line_num:   line number
     """
     cols = line.split('\t')
     if len(cols) != 2:
@@ -173,8 +173,8 @@ class Word(object):
   def clean_spoken(cls, sent):
     """
     clean spoken sentence
-    @param  sent  sentence
-    @return       cleaned sentence
+    :param    sent:  sentence
+    :return:         cleaned sentence
     """
     sent = re.sub(r'<anchor [^>]+/?>', '', sent)
     sent = re.sub(r'<event [^>]+/?>', '', sent)
@@ -210,8 +210,8 @@ class Morph(object):
   def parse(cls, token_str):
     """
     parse token string
-    @param  token_str   morpheme/tag string
-    @return             Morph object
+    :param    token_str:   morpheme/tag string
+    :return:               Morph object
     """
     morph = Morph()
     morph.lex, morph.tag = token_str.rsplit('/', 1)
@@ -226,15 +226,15 @@ class Morph(object):
 def load(is_spoken, paths):
   """
   parse corpus and return sentences (generator)
-  @param  is_spoken   whether spoken corpus or not
-  @param  paths       list of file paths
-  @yield              Sentence object
+  :param  is_spoken:  whether spoken corpus or not
+  :param  paths:      list of file paths
+  :yield:             Sentence object
   """
   def lines(fin):
     """
     return lines (generator)
-    @param  fin   input file
-    @yield        lines
+    :param   fin:  input file
+    :yield:        lines
     """
     for uni_line in fin:
       if uni_line[0] == u'\uFEFF':

@@ -25,8 +25,8 @@ import trie
 def main(fin, fout):
   """
   make syllable-morpheme TRIE dictionary
-  @param  fin   input file
-  @param  fout  output file
+  :param  fin:   input file
+  :param  fout:  output file
   """
   trie_root = trie.Node()
   prev_line = ''

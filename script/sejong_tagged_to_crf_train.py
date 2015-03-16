@@ -40,10 +40,10 @@ def select_file(fouts, sizes, new_size):
   """
   select file to print out
   if delta is small, randomly select. or just select min sized file
-  @param  fouts     output file list
-  @param  sizes     size of file list
-  @param  new_size  size of new output
-  @return           index of list
+  :param    fouts:     output file list
+  :param    sizes:     size of file list
+  :param    new_size:  size of new output
+  :return:             index of list
   """
   if len(fouts) == 1:
     sizes[0] += new_size
@@ -62,8 +62,8 @@ def select_file(fouts, sizes, new_size):
 def print_aligned(fout, sent_pairs):
   """
   print aligned (surface, morpheme) pairs
-  @param  fout        output file
-  @param  sent_pairs  list of (surface, morpheme) pairs list
+  :param  fout:        output file
+  :param  sent_pairs:  list of (surface, morpheme) pairs list
   """
   for word_idx, pairs in enumerate(sent_pairs):
     prev_word = sent_pairs[word_idx-1] if word_idx > 0 else None
@@ -138,9 +138,9 @@ def print_aligned(fout, sent_pairs):
 def main(fin_names, fout_name, split_num):
   """
   make training format for CRFsuite
-  @param  fin_names   list of input files
-  @param  fout_name   output file path
-  @param  split_num   split number of output file
+  :param  fin_names:  list of input files
+  :param  fout_name:  output file path
+  :param  split_num:  split number of output file
   """
   fouts = []
   sizes = []

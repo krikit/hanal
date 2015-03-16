@@ -31,8 +31,8 @@ IS_SPOKEN = False
 def main(fin_names, fout):
   """
   make word(EoJeol) per line formatted corpus from Sejong tagged corpus
-  @param  fin_names   list of input files
-  @param  fout    output file
+  :param  fin_names:  list of input files
+  :param  fout:       output file
   """
   for sent in sejong_corpus.load(IS_SPOKEN, fin_names):
     print >> fout, sent

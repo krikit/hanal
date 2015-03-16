@@ -23,7 +23,7 @@ class Node(object):
   """
   def __init__(self, char=u''):
     """
-    @param  char  character
+    :param  char:  character
     """
     self.char = char
     self.value = u''
@@ -45,9 +45,9 @@ class Node(object):
 def insert(root, key, val):
   """
   insert a key-value pair in node
-  @param  root  root node to insert
-  @param  key   key string
-  @param  val   value (string)
+  :param  root:  root node to insert
+  :param  key:   key string
+  :param  val:   value (string)
   """
   if not key:
     root.value = val
@@ -63,9 +63,9 @@ def insert(root, key, val):
 def find(root, key):
   """
   find value with key
-  @param  root  root node start to find
-  @param  key   key string
-  @return       value (string), None is fail to find
+  :param    root:  root node start to find
+  :param    key:   key string
+  :return:         value (string), None is fail to find
   """
   node = root
   for char in key:
