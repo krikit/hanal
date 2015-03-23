@@ -25,15 +25,23 @@ class Node(object):
     """
     :param  char:  character
     """
-    self.char = char
-    self.value = u''
-    self.children = {}
+    self.depth = -1    # depth from root for flatten(serialize) nodes
+    self.char = char    # character for key
+    self.value = u''    # value
+    self.children = {}    # child nodes
+    self.child_start = -1    # number of nodes from this node to first child node
 
   def __unicode__(self):
     node_str = self.char if self.char else u'ROOT'
     if self.value:
       node_str = u'{%s: %s}' % (node_str, self.value)
-    return u'(%s, [%s])' % (node_str, u', '.join(self.children.keys()))
+    pfx = u''
+    if self.depth > 0:
+      pfx = u' ' * self.depth
+    child_start_str = u''
+    if self.child_start > 0:
+      child_start_str = u', %d' % self.child_start
+    return u'%s(%s, [%s]%s)' % (pfx, node_str, u', '.join(self.children.keys()), child_start_str)
 
   def __str__(self):
     return self.__unicode__().encode('UTF-8')
@@ -74,3 +82,53 @@ def find(root, key):
     else:
       node = node.children[char]
   return node.value
+
+
+def breadth_first_traverse(root_node):
+  """
+  breadth first tranverse from given root node
+  :param  root_node:  root node to traverse
+  :return:            serialized list of nodes
+  """
+  def breadth_first_traverse_inner(idx, nodes):
+    """
+    breadth first traverse with depth information
+    :param  idx:    current index
+    :param  nodes:  nodes list
+    """
+    if idx >= len(nodes):
+      return
+    node = nodes[idx]
+    logging.debug(u'TRAVERSE: %s', node)
+    for key in sorted(node.children.keys()):
+      child_node = node.children[key]
+      child_node.depth = node.depth + 1
+      nodes.append(child_node)
+    breadth_first_traverse_inner(idx+1, nodes)
+
+  def set_child_start(nodes):
+    """
+    set child_start field of nodes
+    :param  nodes:  nodes list
+    """
+    partial_sum_of_children = 0
+    num_of_next_siblings = 0
+    for idx, node in enumerate(nodes):
+      if idx == 0 or nodes[idx-1].depth != node.depth:
+        partial_sum_of_children = 0
+        num_of_next_siblings = 0
+        for jdx in xrange(idx, len(nodes)):
+          if nodes[jdx].depth == node.depth:
+            num_of_next_siblings += 1
+          else:
+            break
+      else:
+        partial_sum_of_children += len(node.children)
+        num_of_next_siblings -= 1
+      node.child_start = partial_sum_of_children + num_of_next_siblings if node.children else -1
+
+  root_node.depth = 0
+  nodes = [root_node,]
+  breadth_first_traverse_inner(0, nodes)
+  set_child_start(nodes)
+  return nodes

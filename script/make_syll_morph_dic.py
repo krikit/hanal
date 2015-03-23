@@ -45,6 +45,9 @@ def main(fin, fout):
     trie.insert(trie_root, syllable, morph)
 
   # TODO(krikit): flatten tree structured trie into single array
+  nodes = trie.breadth_first_traverse(trie_root)
+  for idx, node in enumerate(nodes):
+    logging.debug(u'%d:%s', idx, node)
 
 
 if __name__ == '__main__':
