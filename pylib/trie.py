@@ -46,67 +46,59 @@ class Node(object):
   def __str__(self):
     return self.__unicode__().encode('UTF-8')
 
-
-#############
-# functions #
-#############
-def insert(root, key, val):
-  """
-  insert a key-value pair in node
-  :param  root:  root node to insert
-  :param  key:   key string
-  :param  val:   value (string)
-  """
-  if not key:
-    root.value = val
-  elif key[0] in root.children:
-    insert(root.children[key[0]], key[1:], val)
-  else:
-    new_node = Node(key[0])
-    root.children[key[0]] = new_node
-    insert(new_node, key[1:], val)
-  logging.debug(u'INSERT {%s: %s} INTO %s', key, val, root)
-
-
-def find(root, key):
-  """
-  find value with key
-  :param    root:  root node start to find
-  :param    key:   key string
-  :return:         value (string), None is fail to find
-  """
-  node = root
-  for char in key:
-    if char not in node.children:
-      return None
+  def insert(self, key, val):
+    """
+    insert a key-value pair from this node
+    :param  key:  key string
+    :param  val:  value (string)
+    """
+    if not key:
+      self.value = val
+    elif key[0] in self.children:
+      self.children[key[0]].insert(key[1:], val)
     else:
-      node = node.children[char]
-  return node.value
+      new_node = Node(key[0])
+      self.children[key[0]] = new_node
+      new_node.insert(key[1:], val)
+    logging.debug(u'INSERT {%s: %s} INTO %s', key, val, self)
 
-
-def breadth_first_traverse(root_node):
-  """
-  breadth first tranverse from given root node
-  :param  root_node:  root node to traverse
-  :return:            serialized list of nodes
-  """
-  def breadth_first_traverse_inner(idx, nodes):
+  def find(self, key):
     """
-    breadth first traverse with depth information
-    :param  idx:    current index
-    :param  nodes:  nodes list
+    find value with key
+    :param    key:  key string
+    :return:        value (string), None is fail to find
     """
-    if idx >= len(nodes):
-      return
-    node = nodes[idx]
-    logging.debug(u'TRAVERSE: %s', node)
-    for key in sorted(node.children.keys()):
-      child_node = node.children[key]
-      child_node.depth = node.depth + 1
-      nodes.append(child_node)
-    breadth_first_traverse_inner(idx+1, nodes)
+    node = self
+    for char in key:
+      if char not in node.children:
+        return None
+      else:
+        node = node.children[char]
+    return node.value
 
-  def set_child_start(nodes):
+  def breadth_first_traverse(self):
+    """
+    breadth first tranverse from given root node
+    :return:  serialized list of nodes
+    """
+    self.depth = 0
+    idx = 0
+    nodes = [self,]
+    while idx < len(nodes):
+      if (idx+1) % 100000 == 0:
+        logging.info('%d00k-th node', ((idx+1) / 100000))
+      node = nodes[idx]
+      logging.debug(u'TRAVERSE: %s', node)
+      for key in sorted(node.children.keys()):
+        child_node = node.children[key]
+        child_node.depth = node.depth + 1
+        nodes.append(child_node)
+      idx += 1
+    self._set_child_start(nodes)
+    return nodes
+
+  @classmethod
+  def _set_child_start(cls, nodes):
     """
     set child_start field of nodes
     :param  nodes:  nodes list
@@ -126,9 +118,3 @@ def breadth_first_traverse(root_node):
         partial_sum_of_children += len(node.children)
         num_of_next_siblings -= 1
       node.child_start = partial_sum_of_children + num_of_next_siblings if node.children else -1
-
-  root_node.depth = 0
-  nodes = [root_node,]
-  breadth_first_traverse_inner(0, nodes)
-  set_child_start(nodes)
-  return nodes
