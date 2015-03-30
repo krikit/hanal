@@ -13,6 +13,7 @@ __copyright__ = 'Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Cla
 # imports #
 ###########
 import argparse
+from collections import defaultdict
 import logging
 import sys
 
@@ -28,24 +29,23 @@ def main(fin, fout):
   :param  fin:   input file
   :param  fout:  output file
   """
-  trie_root = trie.Node()
-  prev_line = ''
+  syll_morph_dic = defaultdict(set)
   for line_num, line in enumerate(fin, start=1):
+    if line_num % 1000000 == 0:
+      logging.info('%dm-th line', (line_num / 1000000))
     line = line.strip()
     if not line:
       continue
-    if line == prev_line:
-      logging.error('Duplicate line at (%d): %s', line_num, line)
-      sys.exit(1)
-    elif line < prev_line:
-      logging.error('File is not sorted (%d): %s', line_num, line)
-      sys.exit(2)
-    prev_line = line
     syllable, morph = unicode(line, 'UTF-8').split(u'\t', 1)
-    trie.insert(trie_root, syllable, morph)
+    syll_morph_dic[syllable].add(morph)
+
+  trie_root = trie.Node()
+  for syllable in sorted(syll_morph_dic.keys()):
+    morphs = sorted(list(syll_morph_dic[syllable]))
+    trie_root.insert(syllable, u'\t'.join(morphs))
 
   # TODO(krikit): flatten tree structured trie into single array
-  nodes = trie.breadth_first_traverse(trie_root)
+  nodes = trie_root.breadth_first_traverse()
   for idx, node in enumerate(nodes):
     logging.debug(u'%d:%s', idx, node)
 
