@@ -12,6 +12,13 @@ __copyright__ = 'Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Cla
 # imports #
 ###########
 import logging
+import struct
+
+
+#############
+# constants #
+#############
+_NODE_STRUCT = struct.Struct('iiii')    # char, value index, child start, number of children
 
 
 #########
@@ -118,3 +125,11 @@ class Node(object):
         partial_sum_of_children += len(node.children)
         num_of_next_siblings -= 1
       node.child_start = partial_sum_of_children + num_of_next_siblings if node.children else -1
+
+  def pack(self, val_idx):
+    """
+    pack to struct
+    :param    val_idx:  value(string) index
+    :return:            packed struct
+    """
+    return _NODE_STRUCT.pack(0 if not self.char else ord(self.char[0]), val_idx, self.child_start, len(self.children))
