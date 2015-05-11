@@ -20,7 +20,7 @@ Dependents
 
 License
 -------
-Copyright (c) 2014, krikit
+Copyright (c) 2014-2015, krikit.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
