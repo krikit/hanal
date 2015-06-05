@@ -13,13 +13,15 @@ __copyright__ = 'Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Cla
 # imports #
 ###########
 from collections import namedtuple
-import editdistance
 import logging
+
+import editdistance
+
+
 
 # for decomposing syllables into consonants and vowels
 # http://biohackers.net/wiki/PythonAndHangul#head-4788cfe894c55238b6133994c6ab356302f63ec8
-import hangul
-import sejong_corpus
+from src.main.pylib import hangul, sejong_corpus
 
 
 #############
