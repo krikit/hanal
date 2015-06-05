@@ -18,7 +18,7 @@
 ////////////
 // macros //
 ////////////
-#define EXCEPT(msg) hanal::Except(msg, __FILE__, __LINE__, __PRETTY_FUNCTION__)
+#define HANAL_THROW(msg) throw hanal::Except(msg, __FILE__, __LINE__, __PRETTY_FUNCTION__)
 
 
 namespace hanal {

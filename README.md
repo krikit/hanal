@@ -16,6 +16,10 @@ Dependents
 ### C/C++
 * CRFsuite
   - http://www.chokkan.org/software/crfsuite
+* boost
+  - http://boost.org
+* googlemock
+  - http://code.google.com/p/googlemock
 
 
 License
