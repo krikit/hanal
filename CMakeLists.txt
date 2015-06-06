@@ -6,7 +6,7 @@ set(hanal_VERSION_MINOR 1)
 set(hanal_VERSION_PATCH 0)
 set(hanal_VERSION ${hanal_VERSION_MAJOR}.${hanal_VERSION_MINOR}.${hanal_VERSION_PATCH})
 
-find_package(Boost COMPONENTS iostreams)
+find_package(Boost COMPONENTS iostreams log)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 include_directories(
@@ -14,6 +14,9 @@ include_directories(
   src/main/cpp
   src/test/cpp
   ${Boost_INCLUDE_DIR}
+)
+add_definitions(
+  -DBOOST_LOG_DYN_LINK
 )
 aux_source_directory(src/main/cpp/hanal src_main_cpp_hanal)
 
@@ -24,7 +27,7 @@ target_link_libraries(hanal ${Boost_LIBRARIES})
 aux_source_directory(src/test/cpp/hanal src_test_cpp_hanal)
 aux_source_directory(src/test/cpp src_test_cpp)
 add_executable(test_hanal ${src_test_cpp_hanal} ${src_test_cpp})
-target_link_libraries(test_hanal hanal)
+target_link_libraries(test_hanal hanal ${Boost_LIBRARIES})
 
 enable_testing()
-add_test(test_hanal test_hanal)
+add_test(test_hanal test_hanal "--rsc-dir=${CMAKE_SOURCE_DIR}/rsc")

@@ -31,7 +31,12 @@ Trie::~Trie() {
 // methods //
 /////////////
 void Trie::open(std::string path) {
-  _mapped_file.open(path);
+  close();
+  try {
+    _mapped_file.open(path);
+  } catch (std::exception exc) {
+    HANAL_THROW(exc.what());
+  }
   if (!_mapped_file.is_open()) HANAL_THROW("Fail to open file: " + path);
   if ((_mapped_file.size() > 0) && ((_mapped_file.size() % sizeof(node_t) != 0))) {
     close();

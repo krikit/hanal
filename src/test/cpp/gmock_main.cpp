@@ -29,9 +29,18 @@
 //
 // Author: wan@google.com (Zhanyong Wan)
 
+#include <map>
 #include <iostream>
+#include <string>
+
+#include "boost/algorithm/string.hpp"
+#include "boost/algorithm/string/predicate.hpp"
+#include "boost/log/trivial.hpp"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+
+// global variable for program arguments
+std::map<std::string, std::string> prog_args;
 
 // MS C++ compiler/linker has a bug on Windows (not on Windows CE), which
 // causes a link error when _tmain is defined in a static library and UNICODE
@@ -50,5 +59,26 @@ GTEST_API_ int main(int argc, char** argv) {
   // also responsible for initializing Google Test.  Therefore there's
   // no need for calling testing::InitGoogleTest() separately.
   testing::InitGoogleMock(&argc, argv);
+
+  // parse program arguments
+  for (int i = 1; i < argc; ++i) {
+    // every arguments starts with '--' and splited into key and value with delimiter '='
+    // for example: '--rsc-dir=../rsc' will be parsed into 'rsc-dir' for key and '../rsc' for value
+    if (boost::starts_with(argv[i], "--")) {
+      BOOST_LOG_TRIVIAL(debug) << "argv[" << i << "]: " << argv[i];
+      char* delim_pos = strchr(&argv[i][2], '=');
+      if (delim_pos > &argv[i][2]) {
+        std::string key(&argv[i][2], (delim_pos - &argv[i][2]));
+        boost::trim(key);
+        std::string val(delim_pos + 1);
+        boost::trim(val);
+        if (!key.empty() && !val.empty()) {
+          BOOST_LOG_TRIVIAL(debug) << "prog_args[" << key << "] = " << val;
+          prog_args[key] = val;
+        }
+      }
+    }
+  }
+
   return RUN_ALL_TESTS();
 }
