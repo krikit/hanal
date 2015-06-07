@@ -14,6 +14,7 @@
 #include <string>
 
 #include "boost/iostreams/device/mapped_file.hpp"
+#include "boost/optional.hpp"
 
 
 namespace hanal {
@@ -34,6 +35,21 @@ class Trie {
 
   void close();    ///< close resource file
 
+  /*
+   * @brief        find value index with given key
+   * @param   key  key string
+   * @return       value index. boost::none for non-existing key
+   */
+  boost::optional<int> find(const std::wstring& key);
+
+  /*
+   * @brief        find value index with given key
+   * @param   key  key string
+   * @return       value index. boost::none for non-existing key
+   */
+  boost::optional<int> find(const wchar_t* key);
+
+
  private:
   typedef struct {
     wchar_t ch = 0;    ///< (wide) character
@@ -44,6 +60,14 @@ class Trie {
 
   boost::iostreams::mapped_file_source _mapped_file;    ///< mmap file
   const node_t* _root_node = nullptr;    ///< root node of trie
+
+  /*
+   * @brief         find value with given key start with node
+   * @param   key   key string
+   * @param   node  start node
+   * @return        value index. boost::none for non-existing key
+   */
+  boost::optional<int> _find(const wchar_t* key, const node_t* node);
 };
 
 
