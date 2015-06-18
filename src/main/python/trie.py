@@ -110,8 +110,6 @@ class Node(object):
     set child_start field of nodes
     :param  nodes:  nodes list
     """
-    partial_sum_of_children = 0
-    num_of_next_siblings = 0
     for idx, node in enumerate(nodes):
       if idx == 0 or nodes[idx-1].depth != node.depth:
         partial_sum_of_children = 0
@@ -122,9 +120,9 @@ class Node(object):
           else:
             break
       else:
-        partial_sum_of_children += len(node.children)
+        partial_sum_of_children += len(nodes[idx-1].children)
         num_of_next_siblings -= 1
-      node.child_start = partial_sum_of_children + num_of_next_siblings if node.children else -1
+      node.child_start = (partial_sum_of_children + num_of_next_siblings) if node.children else -1
 
   def pack(self, val_idx):
     """
