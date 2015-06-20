@@ -35,6 +35,8 @@
 
 #include "boost/algorithm/string.hpp"
 #include "boost/algorithm/string/predicate.hpp"
+#include "boost/log/core.hpp"
+#include "boost/log/expressions.hpp"
 #include "boost/log/trivial.hpp"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -59,6 +61,8 @@ GTEST_API_ int main(int argc, char** argv) {
   // also responsible for initializing Google Test.  Therefore there's
   // no need for calling testing::InitGoogleTest() separately.
   testing::InitGoogleMock(&argc, argv);
+
+  boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
 
   // parse program arguments
   for (int i = 1; i < argc; ++i) {

@@ -49,14 +49,37 @@ TEST_F(TrieTest, open_close) {
 
 
 TEST_F(TrieTest, find) {
-  auto found = trie.find(L"a");
+  auto key = L"acceleration";
+  auto found = trie.find(key);
   EXPECT_TRUE(found != boost::none);
-  BOOST_LOG_TRIVIAL(debug) << "a: " << *found;
-  EXPECT_TRUE(*trie.find(L"a") == *trie.find(std::wstring(L"a")));
+  if (found) {
+    BOOST_LOG_TRIVIAL(debug) << key << ": " << *found;
+    EXPECT_EQ(*trie.find(key), *trie.find(std::wstring(key)));
+  }
 
   found = trie.find(L"__not_found_key__");
   EXPECT_TRUE(found == boost::none);
+  found = trie.find(L"");
+  EXPECT_TRUE(found == boost::none);
 
   EXPECT_THROW(trie.find(nullptr), hanal::Except);
-  EXPECT_THROW(trie.find(L""), hanal::Except);
+}
+
+
+TEST_F(TrieTest, search_all) {
+  auto text = L"accelerations";
+  auto matches = trie.search_common_prefix_matches(text);
+  EXPECT_EQ(5, matches.size());
+  if (5 == matches.size()) {
+    BOOST_LOG_TRIVIAL(debug) << text << ": " << matches.size() << " entries";
+    EXPECT_EQ(trie.search_common_prefix_matches(text).size(),
+              trie.search_common_prefix_matches(std::wstring(text)).size());
+  }
+
+  matches = trie.search_common_prefix_matches(L"뷁");
+  EXPECT_EQ(0, matches.size());
+  matches = trie.search_common_prefix_matches(L"");
+  EXPECT_EQ(0, matches.size());
+
+  EXPECT_THROW(trie.search_common_prefix_matches(nullptr), hanal::Except);
 }
