@@ -11,20 +11,33 @@
 //////////////
 // includes //
 //////////////
-#include <string>
 #include <list>
+#include <string>
 
-#include "boost/iostreams/device/mapped_file.hpp"
 #include "boost/optional.hpp"
+
+#include "MappedDic.hpp"
 
 
 namespace hanal {
 
 
 /**
+ * node of trie
+ */
+struct _node_t {
+  wchar_t ch = 0;    ///< (wide) character
+  int32_t val_idx = -1;    ///< index of value
+  int32_t child_start = -1;    ///< child node start from this node
+  int32_t child_num = -1;    ///< number of children
+  std::string str(const _node_t* root_node) const;    ///< string representation for debugging
+};
+
+
+/**
  * trie for wide character string
  */
-class Trie {
+class Trie: public MappedDic<_node_t> {
  public:
   struct match_t {
     int len;    ///< match length
@@ -32,15 +45,7 @@ class Trie {
     explicit match_t(int len = -1, int val_idx = -1): len(len), val_idx(val_idx) {}
   };
 
-  virtual ~Trie();
-
-  /**
-   * @brief        open resource file
-   * @param  path  file path
-   */
-  void open(std::string path);
-
-  void close();    ///< close resource file
+  virtual void open(std::string path);
 
   /*
    * @brief        find value index with given key
@@ -72,17 +77,6 @@ class Trie {
 
 
  private:
-  struct _node_t {
-    wchar_t ch = 0;    ///< (wide) character
-    int32_t val_idx = -1;    ///< index of value
-    int32_t child_start = -1;    ///< child node start from this node
-    int32_t child_num = -1;    ///< number of children
-    std::string str(const _node_t* root_node) const;    ///< string representation for debugging
-  };
-
-  boost::iostreams::mapped_file_source _mapped_file;    ///< mmap file
-  const _node_t* _root_node = nullptr;    ///< root node of trie
-
   /*
    * @brief         find value with given key start with node
    * @param   key   key string
