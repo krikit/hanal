@@ -3,6 +3,7 @@
  * @copyright  Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Clause License
  */
 
+
 #ifndef HANAL_MAPPEDDIC_HPP
 #define HANAL_MAPPEDDIC_HPP
 
