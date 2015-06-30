@@ -11,6 +11,7 @@
 // includes //
 //////////////
 #include "MappedDic.hpp"
+#include "SejongTag.hpp"
 
 
 namespace hanal {
@@ -20,6 +21,14 @@ namespace hanal {
  * transition matrix
  */
 class TransMat: public MappedDic<float> {
+ public:
+  /**
+   * @brief  get transition weight from/to tag
+   * @param  from  from tag
+   * @param  to    to tag
+   * @return       transition weight
+   */
+  float get(SejongTag from, SejongTag to);
 };
 
 
