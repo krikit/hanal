@@ -4,11 +4,12 @@
  */
 
 
+#include "TransMat.hpp"
+
+
 //////////////
 // includes //
 //////////////
-#include "TransMat.hpp"
-
 #include <string>
 
 
