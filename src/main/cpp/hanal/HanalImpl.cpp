@@ -35,15 +35,17 @@ std::shared_ptr<HanalApi> HanalApi::create() {
 
 
 void HanalImpl::open(std::string rsc_dir, std::string opt_str) {
+  std::unique_lock<std::recursive_mutex> lock(_mutex);
   HANAL_THROW("Not implemented yet!");
 }
 
 void HanalImpl::close() {
-  HANAL_THROW("Not implemented yet!");
+  std::unique_lock<std::recursive_mutex> lock(_mutex);
 }
 
 
 const std::string& HanalImpl::pos_tag(const char* sent, const char* opt_str) {
+  std::unique_lock<std::recursive_mutex> lock(_mutex);
   HANAL_THROW("Not implemented yet!");
 }
 

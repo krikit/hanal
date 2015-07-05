@@ -11,6 +11,7 @@
 // includes //
 //////////////
 #include <memory>
+#include <mutex>    // NOLINT
 #include <vector>
 
 #include "boost/assert.hpp"
@@ -21,7 +22,8 @@
 ///////////////
 // variables //
 ///////////////
-std::vector<std::shared_ptr<hanal::HanalApi>> _handles{ hanal::HanalApi::create() };
+std::vector<std::shared_ptr<hanal::HanalApi>> _handles{ hanal::HanalApi::create() };    // handles
+std::recursive_mutex _mutex;    // mutex to exclusively access handles
 
 
 /////////////
@@ -33,7 +35,7 @@ const char* hanal_version() {
 
 
 int hanal_open(const char* rsc_dir, const char* opt_str) {
-  // TODO(krikit): use mutex and lock for thread safety
+  std::unique_lock<std::recursive_mutex> lock(_mutex);
   auto hanal_api = hanal::HanalApi::create();
   try {
     hanal_api->open(rsc_dir, opt_str);
@@ -47,6 +49,7 @@ int hanal_open(const char* rsc_dir, const char* opt_str) {
 
 
 void hanal_close(int handle) {
+  std::unique_lock<std::recursive_mutex> lock(_mutex);
   _handles[handle].reset();
 }
 

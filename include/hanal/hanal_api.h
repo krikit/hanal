@@ -50,7 +50,7 @@ void hanal_close(int handle);
  * @param  handle   handle got from open
  * @param  sent     input sentence
  * @param  opt_str  option string
- * @return          tagged result
+ * @return          tagged result. JSON format
  */
 const char* hanal_pos_tag(int handle, const char* sent, const char* opt_str);
 

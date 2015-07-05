@@ -11,6 +11,7 @@
 //////////////
 // includes //
 //////////////
+#include <mutex>    // NOLINT
 #include <string>
 
 #include "hanal/HanalApi.hpp"
@@ -39,6 +40,9 @@ class HanalImpl: public HanalApi {
    * @return          tagged result
    */
   const std::string& pos_tag(const char* sent, const char* opt_str);
+
+ private:
+  std::recursive_mutex _mutex;    // mutex to exclusively access API methods
 };
 
 

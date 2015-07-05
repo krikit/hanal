@@ -42,7 +42,7 @@ class HanalApi {
    * @brief           part-of-speech tagging
    * @param  sent     input sentence
    * @param  opt_str  option string
-   * @return          tagged result
+   * @return          tagged result. JSON format
    */
   virtual const std::string& pos_tag(const char* sent, const char* opt_str) = 0;
 };
