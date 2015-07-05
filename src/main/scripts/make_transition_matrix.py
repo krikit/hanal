@@ -17,17 +17,7 @@ import logging
 import struct
 import sys
 
-
-#############
-# constants #
-#############
-_SEJONG_TAGSET = [
-    'EC', 'EF', 'EP', 'ETM', 'ETN', 'IC', 'JC', 'JKB', 'JKC', 'JKG',
-    'JKO', 'JKQ', 'JKS', 'JKV', 'JX', 'MAG', 'MAJ', 'MM', 'NA', 'NF',
-    'NNB', 'NNG', 'NNP', 'NP', 'NR', 'NV', 'SE', 'SF', 'SH', 'SL',
-    'SN', 'SO', 'SP', 'SS', 'SW', 'VA', 'VCN', 'VCP', 'VV', 'VX',
-    'XPN', 'XR', 'XSA', 'XSN', 'XSV'
-]
+import sejong_corpus
 
 
 #############
@@ -61,7 +51,7 @@ def main(fin, fout):
   :param  fin:   input file
   :param  fout:  output file
   """
-  label_dic = {label: idx for idx, label in enumerate(sorted(_SEJONG_TAGSET))}
+  label_dic = {label: idx for idx, label in enumerate(sorted(list(sejong_corpus.TAG_SET)))}
 
   trans_matrix = []
   for line in fin:
