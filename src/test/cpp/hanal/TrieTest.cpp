@@ -29,57 +29,75 @@ class TrieTest: public testing::Test {
   virtual void SetUp() {
     auto iter = prog_args.find("rsc-dir");
     if (iter == prog_args.end()) FAIL() << "--rsc-dir argument required";
-    trie_path = prog_args["rsc-dir"] + "/main_dic.trie";
-    ASSERT_NO_THROW(trie.open(trie_path)) << "trie_path: " << trie_path;
+    morph_trie_path = prog_args["rsc-dir"] + "/morph.trie";
+    state_feat_trie_path = prog_args["rsc-dir"] + "/state_feat.trie";
+    ASSERT_NO_THROW(morph_trie.open(morph_trie_path)) << "morph_trie_path: " << morph_trie_path;
+    ASSERT_NO_THROW(state_feat_trie.open(state_feat_trie_path)) << "state_feat_trie_path: " << state_feat_trie_path;
   }
 
-  hanal::Trie trie;
-  std::string trie_path;    ///< path for trie
+  hanal::Trie morph_trie;
+  hanal::Trie state_feat_trie;
+  std::string morph_trie_path;    ///< path for morphemes morph_trie
+  std::string state_feat_trie_path;    ///< path for state-features morph_trie
 };
 
 
 TEST_F(TrieTest, open_close) {
-  hanal::Trie trie;
-  EXPECT_NO_THROW(trie.open(trie_path)) << "trie_path: " << trie_path;
-  EXPECT_NO_THROW(trie.close());
+  hanal::Trie morph_trie;
+  EXPECT_NO_THROW(morph_trie.open(morph_trie_path)) << "morph_trie_path: " << morph_trie_path;
+  EXPECT_NO_THROW(morph_trie.close());
 
-  EXPECT_THROW(trie.open(prog_args["rsc-dir"]), hanal::Except);    // directory, not file
-  EXPECT_THROW(trie.open(prog_args["rsc-dir"] + "__not_existing_file__"), hanal::Except);
+  hanal::Trie state_feat_trie;
+  EXPECT_NO_THROW(state_feat_trie.open(state_feat_trie_path)) << "state_feat_trie_path: " << state_feat_trie_path;
+  EXPECT_NO_THROW(state_feat_trie.close());
+
+  EXPECT_THROW(morph_trie.open(prog_args["rsc-dir"]), hanal::Except);    // directory, not file
+  EXPECT_THROW(state_feat_trie.open(prog_args["rsc-dir"] + "__not_existing_file__"), hanal::Except);
 }
 
 
 TEST_F(TrieTest, find) {
-  auto key = L"acceleration";
-  auto found = trie.find(key);
-  EXPECT_TRUE(found != boost::none);
-  if (found) {
-    BOOST_LOG_TRIVIAL(debug) << key << ": " << *found;
-    EXPECT_EQ(*trie.find(key), *trie.find(std::wstring(key)));
+  auto morph_key = L"acceleration";
+  auto morph_found = morph_trie.find(morph_key);
+  EXPECT_TRUE(morph_found != boost::none);
+  if (morph_found) {
+    BOOST_LOG_TRIVIAL(debug) << morph_key << ": " << *morph_found;
+    EXPECT_EQ(*morph_trie.find(morph_key), *morph_trie.find(std::wstring(morph_key)));
   }
 
-  found = trie.find(L"__not_found_key__");
-  EXPECT_TRUE(found == boost::none);
-  found = trie.find(L"");
-  EXPECT_TRUE(found == boost::none);
+  // 'BOS' feature at state 'NNG'. index of 'NNG' is 21, so state prefix 'A'+21 is 'V'
+  auto state_feat_key = L"VBOS";
+  auto state_feat_found = state_feat_trie.find(state_feat_key);
+  EXPECT_TRUE(state_feat_found != boost::none);
+  if (state_feat_found) {
+    BOOST_LOG_TRIVIAL(debug) << state_feat_key << ": " << *state_feat_found;
+    EXPECT_EQ(*state_feat_trie.find(state_feat_key), *state_feat_trie.find(std::wstring(state_feat_key)));
+  }
 
-  EXPECT_THROW(trie.find(nullptr), hanal::Except);
+  morph_found = morph_trie.find(L"__not_found_key__");
+  EXPECT_TRUE(morph_found == boost::none);
+  state_feat_found = state_feat_trie.find(L"");
+  EXPECT_TRUE(state_feat_found == boost::none);
+
+  EXPECT_THROW(morph_trie.find(nullptr), hanal::Except);
+  EXPECT_THROW(state_feat_trie.find(nullptr), hanal::Except);
 }
 
 
 TEST_F(TrieTest, search_all) {
   auto text = L"accelerations";
-  auto matches = trie.search_common_prefix_matches(text);
+  auto matches = morph_trie.search_common_prefix_matches(text);
   EXPECT_EQ(5, matches.size());
   if (5 == matches.size()) {
     BOOST_LOG_TRIVIAL(debug) << text << ": " << matches.size() << " entries";
-    EXPECT_EQ(trie.search_common_prefix_matches(text).size(),
-              trie.search_common_prefix_matches(std::wstring(text)).size());
+    EXPECT_EQ(morph_trie.search_common_prefix_matches(text).size(),
+              morph_trie.search_common_prefix_matches(std::wstring(text)).size());
   }
 
-  matches = trie.search_common_prefix_matches(L"뷁");
+  matches = morph_trie.search_common_prefix_matches(L"뷁");
   EXPECT_EQ(0, matches.size());
-  matches = trie.search_common_prefix_matches(L"");
+  matches = morph_trie.search_common_prefix_matches(L"");
   EXPECT_EQ(0, matches.size());
 
-  EXPECT_THROW(trie.search_common_prefix_matches(nullptr), hanal::Except);
+  EXPECT_THROW(morph_trie.search_common_prefix_matches(nullptr), hanal::Except);
 }

@@ -23,7 +23,7 @@ namespace hanal {
 
 
 /**
- * node of trie
+ * node of morph_trie
  */
 struct _node_t {
   wchar_t ch = 0;    ///< (wide) character
@@ -35,7 +35,7 @@ struct _node_t {
 
 
 /**
- * trie for wide character string
+ * morph_trie for wide character string
  */
 class Trie: public MappedDic<_node_t> {
  public:
