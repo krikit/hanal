@@ -104,7 +104,7 @@ def write_to_file(trie_root, output_stem):
     if node.value:
       val_idx = val_serial
       val_serial += 1
-      fout_val.write(struct.Struct('f').pack(node.value))
+      fout_val.write(struct.pack('f', node.value))
     fout_key.write(node.pack(val_idx))
   logging.info('Number of nodes: %d', len(nodes))
   logging.info('Number of values: %d', val_serial)

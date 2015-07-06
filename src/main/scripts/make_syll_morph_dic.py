@@ -15,6 +15,7 @@ __copyright__ = 'Copyright (C) 2014-2015, krikit. All rights reserved. BSD 2-Cla
 import argparse
 from collections import defaultdict
 import logging
+import struct
 import sys
 
 import trie
@@ -46,6 +47,7 @@ def main(fin, output_stem):
 
   fout_key = open('%s.trie' % output_stem, 'wb')
   fout_val = open('%s.val' % output_stem, 'w')
+  fout_val_idx = open('%s.val.idx' % output_stem, 'wb')
   val_serial = 0
   nodes = trie_root.breadth_first_traverse()
   for idx, node in enumerate(nodes):
@@ -54,7 +56,9 @@ def main(fin, output_stem):
     if node.value:
       val_idx = val_serial
       val_serial += 1
-      fout_val.write((node.value + u'\n').encode('UTF-32LE'))
+      uni_val = (node.value + u'\0').encode('UTF-32LE')
+      fout_val.write(uni_val)
+      fout_val_idx.write(struct.pack('h', len(uni_val)))
     fout_key.write(node.pack(val_idx))
   logging.info('Number of nodes: %d', len(nodes))
   logging.info('Number of values: %d', val_serial)
