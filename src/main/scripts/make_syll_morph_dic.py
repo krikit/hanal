@@ -21,6 +21,13 @@ import sys
 import trie
 
 
+#############
+# constants #
+#############
+_ANAL_RESULT_DELIM = u'\1'    # delimiter between ambiguous analisys results
+_MORPH_DELIM = u'\2'    # delimiter between morphemes in single analysis result
+
+
 ########
 # main #
 ########
@@ -38,6 +45,10 @@ def main(fin, output_stem):
     if not line:
       continue
     syllable, morph = unicode(line, 'UTF-8').split(u'\t', 1)
+    if _ANAL_RESULT_DELIM in morph or _MORPH_DELIM in morph:
+      raise RuntimeError('Delimiter in morpheme results')
+    else:
+      morph = morph.replace(u'\t', _ANAL_RESULT_DELIM).replace(u' + ', _MORPH_DELIM)
     syll_morph_dic[syllable].add(morph)
 
   trie_root = trie.Node()
@@ -47,7 +58,7 @@ def main(fin, output_stem):
 
   fout_key = open('%s.trie' % output_stem, 'wb')
   fout_val = open('%s.val' % output_stem, 'w')
-  fout_val_idx = open('%s.val.idx' % output_stem, 'wb')
+  fout_val_idx = open('%s.val.len' % output_stem, 'wb')
   val_serial = 0
   nodes = trie_root.breadth_first_traverse()
   for idx, node in enumerate(nodes):
@@ -58,7 +69,7 @@ def main(fin, output_stem):
       val_serial += 1
       uni_val = (node.value + u'\0').encode('UTF-32LE')
       fout_val.write(uni_val)
-      fout_val_idx.write(struct.pack('h', len(uni_val)))
+      fout_val_idx.write(struct.pack('h', len(uni_val) / 4))    # length include terminating zero value
     fout_key.write(node.pack(val_idx))
   logging.info('Number of nodes: %d', len(nodes))
   logging.info('Number of values: %d', val_serial)
