@@ -20,6 +20,9 @@
 namespace hanal {
 
 
+/**
+ * implementation of hanal API
+ */
 class HanalImpl: public HanalApi {
  public:
   virtual ~HanalImpl();    ///< dtor
@@ -42,7 +45,7 @@ class HanalImpl: public HanalApi {
   const std::string& pos_tag(const char* sent, const char* opt_str);
 
  private:
-  std::recursive_mutex _mutex;    // mutex to exclusively access API methods
+  std::recursive_mutex _mutex;    ///< mutex to access API methods exclusively
 };
 
 

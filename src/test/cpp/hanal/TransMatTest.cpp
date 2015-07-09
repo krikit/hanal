@@ -12,7 +12,6 @@
 
 #include "gtest/gtest.h"
 #include "hanal/Except.hpp"
-
 #include "hanal/TransMat.hpp"
 
 

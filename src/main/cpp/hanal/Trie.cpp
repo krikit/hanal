@@ -56,7 +56,7 @@ boost::optional<int> Trie::find(const std::wstring& key) {
 
 
 boost::optional<int> Trie::find(const wchar_t* key) {
-  if (key == nullptr) HANAL_THROW("Null key");
+  HANAL_ASSERT(key != nullptr, "Null key");
   if (*key == L'\0') return boost::none;
   return _find(key, data());
 }
@@ -68,7 +68,7 @@ std::list<Trie::match_t> Trie::search_common_prefix_matches(const std::wstring& 
 
 
 std::list<Trie::match_t> Trie::search_common_prefix_matches(const wchar_t* text) {
-  if (text == nullptr) HANAL_THROW("Null text");
+  HANAL_ASSERT(text != nullptr, "Null text");
   std::list<match_t> found;
   _search(text, data(), &found, 0);
   return found;

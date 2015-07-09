@@ -10,8 +10,8 @@
 //////////////
 // includes //
 //////////////
-#include "MappedDic.hpp"
-#include "SejongTag.hpp"
+#include "hanal/MappedDic.hpp"
+#include "hanal/SejongTag.hpp"
 
 
 namespace hanal {

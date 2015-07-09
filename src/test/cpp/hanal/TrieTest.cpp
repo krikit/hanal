@@ -14,7 +14,6 @@
 #include "boost/log/trivial.hpp"
 #include "gtest/gtest.h"
 #include "hanal/Except.hpp"
-
 #include "hanal/Trie.hpp"
 
 

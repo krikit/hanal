@@ -15,7 +15,6 @@
 
 #include "boost/iostreams/device/mapped_file.hpp"
 #include "boost/lexical_cast.hpp"
-
 #include "hanal/Except.hpp"
 
 
@@ -40,11 +39,9 @@ class MappedDic {
     } catch (std::exception exc) {
       HANAL_THROW(exc.what());
     }
-    if (!_source.is_open()) HANAL_THROW("Fail to open file: " + path);
-    if ((_source.size() > 0) && ((_source.size() % sizeof(T) != 0))) {
-      close();
-      HANAL_THROW("Invalid size of file: " + boost::lexical_cast<std::string>(_source.size()));
-    }
+    HANAL_ASSERT(_source.is_open(), "Fail to open file: " + path);
+    HANAL_ASSERT(_source.size() > 0 && (_source.size() % sizeof(T)) == 0,
+                 "Invalid size of file: " + boost::lexical_cast<std::string>(_source.size()));
   }
 
   /**
@@ -59,6 +56,14 @@ class MappedDic {
    */
   virtual const T* data() {
     return reinterpret_cast<const T*>(_source.data());
+  }
+
+  /**
+   * @brief   get number of data element
+   * @return  number of element
+   */
+  virtual int size() {
+    return _source.size() / sizeof(T);
   }
 
  private:

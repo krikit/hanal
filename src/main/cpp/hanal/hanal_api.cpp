@@ -12,9 +12,10 @@
 //////////////
 #include <memory>
 #include <mutex>    // NOLINT
+#include <string>
 #include <vector>
 
-#include "boost/assert.hpp"
+#include "boost/lexical_cast.hpp"
 #include "hanal/Except.hpp"
 #include "hanal/HanalApi.hpp"
 
@@ -44,7 +45,7 @@ int hanal_open(const char* rsc_dir, const char* opt_str) {
     return -1;
     // TODO(krikit): there should be method to notice error message
   }
-  return _handles.size();
+  return static_cast<int>(_handles.size());
 }
 
 
@@ -55,7 +56,7 @@ void hanal_close(int handle) {
 
 
 const char* hanal_pos_tag(int handle, const char* sent, const char* opt_str) {
-  BOOST_ASSERT(handle > 0 && handle < _handles.size());
+  HANAL_ASSERT(handle > 0 && handle < _handles.size(), "Invalid handle" + boost::lexical_cast<std::string>(handle));
   auto hanal_api = _handles[handle];
   return hanal_api->pos_tag(sent, opt_str).c_str();
 }
