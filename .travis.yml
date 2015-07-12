@@ -1,8 +1,7 @@
 language: cpp
 
 compiler:
-  - gcc
-  - clang
+  - gcc-4.8
 
 before_script:
   - sudo apt-get update -qq
