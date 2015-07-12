@@ -22,6 +22,12 @@ Dependents
   - http://code.google.com/p/googlemock
 
 
+Build Status
+------------
+[![Build Status](https://travis-ci.org/krikit/hanal.png)](https://travis-ci.org/krikit/hanal)
+Powered by [Travis-CI](https://travis-ci.org)
+
+
 License
 -------
 Copyright (c) 2014-2015, krikit.
