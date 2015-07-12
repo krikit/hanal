@@ -9,4 +9,4 @@ before_script:
   - cd build
   - cmake ..
 
-script: make test
+script: make && make test
