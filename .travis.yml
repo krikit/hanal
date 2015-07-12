@@ -6,7 +6,7 @@ compiler:
 
 before_script:
   - sudo apt-get update -qq
-  - sudo apt-get install libboost-iostreams-dev libboost-log-dev
+  - sudo apt-get install libboost-all-dev
 
 script:
   - mkdir build
