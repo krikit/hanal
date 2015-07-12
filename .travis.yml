@@ -5,8 +5,11 @@ compiler:
   - clang
 
 before_script:
+  - sudo apt-get install libboost-iostreams-dev libboost-log-dev
   - mkdir build
   - cd build
   - cmake ..
 
-script: make && make test
+script:
+  - make
+  - ctest

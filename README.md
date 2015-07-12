@@ -25,6 +25,7 @@ Dependents
 Build Status
 ------------
 [![Build Status](https://travis-ci.org/krikit/hanal.png)](https://travis-ci.org/krikit/hanal)
+
 Powered by [Travis-CI](https://travis-ci.org)
 
 
