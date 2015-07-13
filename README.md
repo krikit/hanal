@@ -22,11 +22,15 @@ Dependents
   - http://code.google.com/p/googlemock
 
 
-Build Status
-------------
+Build/Coverage Status
+---------------------
 [![Build Status](https://travis-ci.org/krikit/hanal.png)](https://travis-ci.org/krikit/hanal)
 
 Powered by [Travis-CI](https://travis-ci.org)
+
+[![Coverage Status](https://coveralls.io/repos/krikit/hanal/badge.svg?branch=master&service=github)](https://coveralls.io/github/krikit/hanal?branch=master)
+
+Powered by [COVERALLS](https://coveralls.io)
 
 
 License
