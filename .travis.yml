@@ -37,4 +37,4 @@ script:
   - ctest
 
 after_success:
-  - coveralls
+  - coveralls --gcov gcov-4.8
