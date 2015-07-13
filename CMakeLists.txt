@@ -9,7 +9,15 @@ set(hanal_VERSION ${hanal_VERSION_MAJOR}.${hanal_VERSION_MINOR}.${hanal_VERSION_
 find_package(Boost COMPONENTS iostreams log)
 find_package(Threads)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+if (gcov STREQUAL "on")
+  set(CMAKE_BUILD_TYPE "Debug")
+  add_definitions(
+    -fprofile-arcs
+    -ftest-coverage
+  )
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lgcov -coverage")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov -coverage")
+endif()
 include_directories(
   include
   src/main/cpp
@@ -17,6 +25,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 add_definitions(
+  -std=c++11
   -DBOOST_LOG_DYN_LINK
 )
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")

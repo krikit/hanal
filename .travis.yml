@@ -24,12 +24,17 @@ install:
   - tar jxf boost-trunk.tar.bz2 --strip-components=1 -C $BOOST_ROOT
   - (cd $BOOST_ROOT; ./bootstrap.sh --with-libraries=iostreams,log)
   - (cd $BOOST_ROOT; ./b2 threading=multi --prefix=$BOOST_ROOT -d0 install)
+  # install coveralls
+  - sudo pip install cpp-coveralls
 
 before_script:
   - mkdir build
   - cd build
-  - cmake -DBOOST_ROOT=$BOOST_ROOT ..
+  - cmake -DBOOST_ROOT=$BOOST_ROOT -Dgcov=on ..
 
 script:
   - make
   - ctest
+
+after_success:
+  - coveralls --exclude lib --exlcude tests --gcov-options '\-lp'
