@@ -1,21 +1,22 @@
 language: cpp
 
 compiler:
-  - gcc-4.8
+  - gcc
   - clang
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get update
+# before_install:
+#   - sudo apt-get update -qq
+#   - sudo apt-get install -qq
+#   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+#   - sudo apt-get update
 
 install:
   # install gcc-4.8
-  - sudo apt-get install g++-4.8
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90
-  - sudo apt-get install libstdc++-4.8-dev
+  # - sudo apt-get install g++-4.8
+  # - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
+  # - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90
+  # - sudo apt-get install libstdc++-4.8-dev
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   # install boost
   - wget --no-verbose --output-document=boost-trunk.tar.bz2 http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
   - export BOOST_ROOT="$TRAVIS_BUILD_DIR/../boost-trunk"
@@ -27,14 +28,24 @@ install:
   # install coveralls
   - sudo pip install cpp-coveralls
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.8
+      - g++-4.8
+      - clang
+
 before_script:
   - mkdir build
   - cd build
-  - cmake -DBOOST_ROOT=$BOOST_ROOT -Dgcov=on ..
+  - if [ "$CXX" = "g++" ]; then cmake -DBOOST_ROOT=$BOOST_ROOT -Dgcov=on ..; fi
+  - if [ "$CXX" = "clang++" ]; then cmake -DBOOST_ROOT=$BOOST_ROOT ..; fi
 
 script:
   - make
   - ctest
 
 after_success:
-  - coveralls --gcov gcov-4.8
+  - if [ "$CXX" = "g++" ]; then coveralls --gcov gcov-4.8; fi
