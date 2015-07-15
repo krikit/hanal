@@ -30,7 +30,7 @@ addons:
 before_script:
   - mkdir build
   - cd build
-  - if [ "$CXX" = "g++-4.8" ]; then cmake -DBOOST_ROOT=$BOOST_ROOT -Dgcov=on ..; fi
+  - if [ "$CXX" = "g++-4.8" ]; then cmake -DBOOST_ROOT=$BOOST_ROOT -DGCOV=ON ..; fi
   - if [ "$CXX" = "clang++" ]; then cmake -DBOOST_ROOT=$BOOST_ROOT ..; fi
 
 script:
@@ -39,4 +39,4 @@ script:
 
 after_success:
   - cd ..
-  - if [ "$CXX" = "g++-4.8" ]; then coveralls --gcov gcov-4.8; fi
+  - if [ "$CXX" = "g++-4.8" ]; then coveralls --gcov gcov-4.8 --exclude src/test; fi

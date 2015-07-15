@@ -6,10 +6,15 @@ set(hanal_VERSION_MINOR 1)
 set(hanal_VERSION_PATCH 0)
 set(hanal_VERSION ${hanal_VERSION_MAJOR}.${hanal_VERSION_MINOR}.${hanal_VERSION_PATCH})
 
+option(GCOV "on/off gcov options" OFF)
+
 find_package(Boost COMPONENTS iostreams log)
 find_package(Threads)
 
-if (gcov STREQUAL "on")
+if (NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  set(CMAKE_BUILD_TYPE "Debug")
+endif()
+if (GCOV)
   set(CMAKE_BUILD_TYPE "Debug")
   add_definitions(
     -fprofile-arcs
@@ -28,7 +33,7 @@ add_definitions(
   -std=c++11
   -DBOOST_LOG_DYN_LINK
 )
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   add_definitions(-g3)
 endif()
 aux_source_directory(src/main/cpp/hanal src_main_cpp_hanal)
