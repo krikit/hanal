@@ -39,4 +39,4 @@ script:
 
 after_success:
   - cd ..
-  - if [ "$CXX" = "g++-4.8" ]; then coveralls --gcov gcov-4.8 --exclude src/test; fi
+  - if [ "$CXX" = "g++-4.8" ]; then coveralls --gcov gcov-4.8 --exclude src/test --exclude build; fi
