@@ -45,3 +45,17 @@ TEST_F(CharTest, characterize) {
   EXPECT_THROW(hanal::Char::characterize(nullptr), hanal::Except);    // null pointer
   EXPECT_THROW(hanal::Char::characterize("\xFE"), hanal::Except);    // invalid UTF-8 character
 }
+
+
+TEST_F(CharTest, is_space) {
+  EXPECT_TRUE(hanal::Char(L' ', nullptr, nullptr).is_space());
+  EXPECT_TRUE(hanal::Char(L'\t', nullptr, nullptr).is_space());
+  EXPECT_TRUE(hanal::Char(L'\v', nullptr, nullptr).is_space());
+  EXPECT_TRUE(hanal::Char(L'\r', nullptr, nullptr).is_space());
+  EXPECT_TRUE(hanal::Char(L'\n', nullptr, nullptr).is_space());
+  EXPECT_TRUE(hanal::Char(L'\u3000', nullptr, nullptr).is_space());    // (wide space)
+
+  EXPECT_FALSE(hanal::Char(L'A', nullptr, nullptr).is_space());
+  EXPECT_FALSE(hanal::Char(L'\0', nullptr, nullptr).is_space());
+  EXPECT_FALSE(hanal::Char(L'\uAC00', nullptr, nullptr).is_space());    // '가'
+}

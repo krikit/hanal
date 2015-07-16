@@ -11,6 +11,8 @@
 // includes //
 //////////////
 #include <locale>
+#include <string>
+#include <vector>
 
 #include "boost/lexical_cast.hpp"
 #include "hanal/Except.hpp"
@@ -46,6 +48,11 @@ std::vector<std::shared_ptr<Char>> Char::characterize(const char* text) {
     chars.emplace_back(std::make_shared<Char>(wchar[0], from_curr, from_next));
   }
   return chars;
+}
+
+
+bool Char::is_space() {
+  return SPACE.find(wchar) != std::wstring::npos;
 }
 
 

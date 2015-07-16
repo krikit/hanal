@@ -25,6 +25,8 @@ namespace hanal {
  */
 class Char {
  public:
+  const std::wstring SPACE = L" \t\v\r\n\u3000";    ///< space characters
+
   wchar_t wchar = L'\0';    ///< converted wide character
   const char* start = nullptr;    ///< start position (zero based, inclusive) of original UTF-8 text
   const char* end = nullptr;    ///< end position (exclusive) of original UTF-8 text
@@ -37,6 +39,12 @@ class Char {
    * @return       vector of words
    */
   static std::vector<std::shared_ptr<Char>> characterize(const char* text);
+
+  /**
+   * whether is space or not
+   * @return  whether is space
+   */
+  bool is_space();
 };
 
 
