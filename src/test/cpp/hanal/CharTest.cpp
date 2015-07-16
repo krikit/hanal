@@ -42,5 +42,6 @@ TEST_F(CharTest, characterize) {
   auto zero_chars = hanal::Char::characterize("");    // zero length text
   EXPECT_EQ(0, zero_chars.size());
 
-  EXPECT_THROW(hanal::Char::characterize(nullptr), hanal::Except);    // throws exception for null pointer
+  EXPECT_THROW(hanal::Char::characterize(nullptr), hanal::Except);    // null pointer
+  EXPECT_THROW(hanal::Char::characterize("\xFE"), hanal::Except);    // invalid UTF-8 character
 }
