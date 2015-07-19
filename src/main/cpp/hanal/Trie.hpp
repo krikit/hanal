@@ -24,19 +24,19 @@ namespace hanal {
 /**
  * node of morph_trie
  */
-struct _node_t {
+struct _trie_node_t {
   wchar_t ch = 0;    ///< (wide) character
   int32_t val_idx = -1;    ///< index of value
   int32_t child_start = -1;    ///< child node start from this node
   int32_t child_num = -1;    ///< number of children
-  std::string str(const _node_t* root_node) const;    ///< string representation for debugging
+  std::string str(const _trie_node_t* root_node) const;    ///< string representation for debugging
 };
 
 
 /**
  * morph_trie for wide character string
  */
-class Trie: public MappedDic<_node_t> {
+class Trie: public MappedDic<_trie_node_t> {
  public:
   struct match_t {
     int len;    ///< match length
@@ -82,7 +82,7 @@ class Trie: public MappedDic<_node_t> {
    * @param   node  start node
    * @return        value index. boost::none for non-existing key
    */
-  boost::optional<int> _find(const wchar_t* key, const _node_t* node);
+  boost::optional<int> _find(const wchar_t* key, const _trie_node_t* node);
 
   /*
    * @brief           search text until not matching
@@ -91,7 +91,7 @@ class Trie: public MappedDic<_node_t> {
    * @param  matches  match list
    * @param  len      length proceeded
    */
-  void _search(const wchar_t* text, const _node_t* node, std::list<match_t>* matches, int len);
+  void _search(const wchar_t* text, const _trie_node_t* node, std::list<match_t>* matches, int len);
 };
 
 

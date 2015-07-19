@@ -25,7 +25,7 @@ namespace hanal {
 /////////////
 // methods //
 /////////////
-std::string _node_t::str(const _node_t* root_node) const {
+std::string _trie_node_t::str(const _trie_node_t* root_node) const {
   std::ostringstream oss;
   oss << "node[" << (this - root_node) << "]{'";
   if (ch == 0) {
@@ -39,11 +39,11 @@ std::string _node_t::str(const _node_t* root_node) const {
 
 
 void Trie::open(std::string path) {
-  MappedDic<_node_t>::open(path);
+  MappedDic<_trie_node_t>::open(path);
 
 #if defined(TRACE) && defined(DEBUG)
-  const _node_t* root_node = data();
-  for (int i = 0; i < sizeof(root_node) / sizeof(_node_t); ++i) {
+  const _trie_node_t* root_node = data();
+  for (int i = 0; i < sizeof(root_node) / sizeof(_trie_node_t); ++i) {
     BOOST_LOG_TRIVIAL(trace) << root_node[i].str(root_node);
   }
 #endif
@@ -75,12 +75,12 @@ std::list<Trie::match_t> Trie::search_common_prefix_matches(const wchar_t* text)
 }
 
 
-boost::optional<int> Trie::_find(const wchar_t* key, const _node_t* node) {
+boost::optional<int> Trie::_find(const wchar_t* key, const _trie_node_t* node) {
   BOOST_LOG_TRIVIAL(trace) << "key: [" << key << "], " << node->str(data());
   if (node->child_start <= 0 || node->child_num <= 0) return boost::none;
   auto begin = node + node->child_start;
   auto end = begin + node->child_num;
-  auto pred = [&key] (const _node_t& _node) { return _node.ch == *key; };
+  auto pred = [&key] (const _trie_node_t& _node) { return _node.ch == *key; };
   auto found_node = std::find_if(begin, end, pred);
   if (found_node == end) {
     BOOST_LOG_TRIVIAL(trace) << "  not found";
@@ -101,12 +101,12 @@ boost::optional<int> Trie::_find(const wchar_t* key, const _node_t* node) {
 }
 
 
-void Trie::_search(const wchar_t* text, const _node_t* node, std::list<Trie::match_t>* matches, int len) {
+void Trie::_search(const wchar_t* text, const _trie_node_t* node, std::list<Trie::match_t>* matches, int len) {
   BOOST_LOG_TRIVIAL(trace) << "text(" << len << "): [" << text << "], " << node->str(data());
   if (*text == '\0' || node->child_start <= 0 || node->child_num <= 0) return;
   auto begin = node + node->child_start;
   auto end = begin + node->child_num;
-  auto pred = [&text] (const _node_t& _node) { return _node.ch == *text; };
+  auto pred = [&text] (const _trie_node_t& _node) { return _node.ch == *text; };
   auto match_node = std::find_if(begin, end, pred);
   if (match_node == end) {
     BOOST_LOG_TRIVIAL(trace) << "  not matched";
