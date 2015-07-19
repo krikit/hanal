@@ -25,12 +25,15 @@ TEST_F(WordTest, tokenize) {
   auto words1 = hanal::Word::tokenize(text1);
   EXPECT_EQ(3, words1.size());
   EXPECT_EQ(1, words1[0]->chars.size());    // "a"
+  EXPECT_EQ(0, words1[0]->idx);
   EXPECT_EQ(text1 + 1, words1[0]->chars.front()->start);
   EXPECT_EQ(text1 + 2, words1[0]->chars.back()->end);
   EXPECT_EQ(1, words1[1]->chars.size());    // "à"
+  EXPECT_EQ(1, words1[1]->idx);
   EXPECT_EQ(text1 + 4, words1[1]->chars.front()->start);
   EXPECT_EQ(text1 + 6, words1[1]->chars.back()->end);
   EXPECT_EQ(2, words1[2]->chars.size());    // "하하"
+  EXPECT_EQ(2, words1[2]->idx);
   EXPECT_EQ(text1 + 9, words1[2]->chars.front()->start);
   EXPECT_EQ(text1 + 15, words1[2]->chars.back()->end);
 

@@ -29,8 +29,9 @@ class Char;
 class Word {
  public:
   std::vector<std::shared_ptr<Char>> chars;    ///< vector of Korean characters consisting word
+  int idx = -1;    ///< start position index (Korean character index in sentence except white spaces)
 
-  explicit Word(std::shared_ptr<Char> char_);    ///< ctor
+  explicit Word(std::shared_ptr<Char> char_, int idx_);    ///< ctor
 
   /**
    * @brief        tokenize UTF-8 text into words
