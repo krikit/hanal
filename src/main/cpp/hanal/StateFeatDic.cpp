@@ -42,7 +42,7 @@ float StateFeatDic::get(SejongTag state, const wchar_t* feat) {
   wchar_t state_char = L'A' + static_cast<int>(state);
   oss << state_char << feat;
   auto idx = _trie.find(oss.str());
-  if (idx) return _value.data()[*idx];
+  if (idx) return _value.const_data()[*idx];
   return 0.0;
 }
 

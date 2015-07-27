@@ -25,7 +25,7 @@ float TransMat::get(SejongTag from, SejongTag to) {
   HANAL_ASSERT(from_ >= 0 && from_ < size, "Invalid from-tag ID: " + boost::lexical_cast<std::string>(from_));
   int to_ = static_cast<int>(to);
   HANAL_ASSERT(to_ >= 0 && to_ < size, "Invalid to-tag ID: " + boost::lexical_cast<std::string>(to_));
-  return data()[to_ * size + from_];
+  return const_data()[to_ * size + from_];
 }
 
 

@@ -38,10 +38,10 @@ struct _trie_node_t {
  */
 class Trie: public MappedDic<_trie_node_t> {
  public:
-  struct match_t {
+  struct match_t {    ///< match result data structure for common prefix matches
     int len;    ///< match length
     int val_idx;    ///< value index
-    explicit match_t(int len = -1, int val_idx = -1): len(len), val_idx(val_idx) {}
+    explicit match_t(int len = -1, int val_idx = -1): len(len), val_idx(val_idx) {}    ///< ctor
   };
 
   virtual void open(std::string path);
@@ -51,28 +51,28 @@ class Trie: public MappedDic<_trie_node_t> {
    * @param   key  key string
    * @return       value index. boost::none for non-existing key
    */
-  boost::optional<int> find(const std::wstring& key);
+  boost::optional<int> find(const std::wstring& key) const;
 
   /*
    * @brief        find value index with given key
    * @param   key  key string
    * @return       value index. boost::none for non-existing key
    */
-  boost::optional<int> find(const wchar_t* key);
+  boost::optional<int> find(const wchar_t* key) const;
 
   /*
    * @brief         search all entries until longest prefix
    * @param   text  text to search
    * @return        collection of match results
    */
-  std::list<match_t> search_common_prefix_matches(const std::wstring &text);
+  std::list<match_t> search_common_prefix_matches(const std::wstring& text) const;
 
   /*
    * @brief         search all entries until longest prefix
    * @param   text  text to search
    * @return        collection of match results
    */
-  std::list<match_t> search_common_prefix_matches(const wchar_t *text);
+  std::list<match_t> search_common_prefix_matches(const wchar_t* text) const;
 
 
  private:
@@ -82,7 +82,7 @@ class Trie: public MappedDic<_trie_node_t> {
    * @param   node  start node
    * @return        value index. boost::none for non-existing key
    */
-  boost::optional<int> _find(const wchar_t* key, const _trie_node_t* node);
+  boost::optional<int> _find(const wchar_t* key, const _trie_node_t* node) const;
 
   /*
    * @brief           search text until not matching
@@ -91,7 +91,7 @@ class Trie: public MappedDic<_trie_node_t> {
    * @param  matches  match list
    * @param  len      length proceeded
    */
-  void _search(const wchar_t* text, const _trie_node_t* node, std::list<match_t>* matches, int len);
+  void _search(const wchar_t* text, const _trie_node_t* node, std::list<match_t>* matches, int len) const;
 };
 
 

@@ -29,45 +29,57 @@ class MappedDic {
   }
 
   /**
-   * @brief        open resource file
-   * @param  path  file path
+   * @brief              open resource file
+   * @param  path        file path
+   * @param  is_private  open mapped file as private mode
    */
-  virtual void open(std::string path) {
+  virtual void open(std::string path, bool is_private = false) {
     close();
     try {
-      _source.open(path);
+      if (is_private) {
+        _map_file.open(path, boost::iostreams::mapped_file::priv);
+      } else {
+        _map_file.open(path, boost::iostreams::mapped_file::readonly);
+      }
     } catch (std::exception exc) {
       HANAL_THROW(exc.what());
     }
-    HANAL_ASSERT(_source.is_open(), "Fail to open file: " + path);
-    HANAL_ASSERT(_source.size() > 0 && (_source.size() % sizeof(T)) == 0,
-                 "Invalid size of file: " + boost::lexical_cast<std::string>(_source.size()));
+    HANAL_ASSERT(_map_file.is_open(), "Fail to open file: " + path);
+    HANAL_ASSERT(_map_file.size() > 0 && (_map_file.size() % sizeof(T)) == 0,
+                 "Invalid size of file: " + boost::lexical_cast<std::string>(_map_file.size()));
   }
 
   /**
    * @brief  close resource file
    */
   virtual void close() {
-    _source.close();
+    _map_file.close();
+  }
+
+  /**
+   * @brief  get read only data pointer
+   */
+  virtual const T* const_data() const {
+    return reinterpret_cast<const T*>(_map_file.const_data());
   }
 
   /**
    * @brief  get data pointer
    */
-  virtual const T* data() {
-    return reinterpret_cast<const T*>(_source.data());
+  virtual T* data() const {
+    return reinterpret_cast<T*>(_map_file.data());
   }
 
   /**
    * @brief   get number of data element
    * @return  number of element
    */
-  virtual int size() {
-    return _source.size() / sizeof(T);
+  virtual int size() const {
+    return _map_file.size() / sizeof(T);
   }
 
  private:
-  boost::iostreams::mapped_file_source _source;    ///< mmap file
+  boost::iostreams::mapped_file _map_file;    ///< mmap file
 };
 
 
