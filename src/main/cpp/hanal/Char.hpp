@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#include "hanal/macro.hpp"
+
 
 namespace hanal {
 
@@ -38,7 +40,7 @@ class Char {
    * @param  text  input text
    * @return       vector of words
    */
-  static std::vector<std::shared_ptr<Char>> characterize(const char* text);
+  static SHDPTRVEC(Char) characterize(const char* text);
 
   /**
    * whether is space or not

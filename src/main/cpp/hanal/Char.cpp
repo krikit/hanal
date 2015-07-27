@@ -32,13 +32,13 @@ Char::Char(wchar_t wchar_, const char* start_, const char* end_)
 /////////////
 // methods //
 /////////////
-std::vector<std::shared_ptr<Char>> Char::characterize(const char* text) {
+SHDPTRVEC(Char) Char::characterize(const char* text) {
   HANAL_ASSERT(text != nullptr, "Null text to characteraize");
   auto en_US_utf8 = std::locale("en_US.UTF-8");
   auto& facet = std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t>>(en_US_utf8);
   auto mbst = std::mbstate_t();
   const char* from_next = nullptr;
-  std::vector<std::shared_ptr<Char>> chars;
+  SHDPTRVEC(Char) chars;
   for (const char* from_curr = text; *from_curr != '\0'; from_curr = from_next) {
     wchar_t wchar[2] = L"";
     wchar_t* to_next = nullptr;

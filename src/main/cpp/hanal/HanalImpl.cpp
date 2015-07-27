@@ -13,6 +13,7 @@
 #include <string>
 
 #include "hanal/Except.hpp"
+#include "hanal/macro.hpp"
 
 
 namespace hanal {
@@ -29,7 +30,7 @@ HanalImpl::~HanalImpl() {
 /////////////
 // methods //
 /////////////
-std::shared_ptr<HanalApi> HanalApi::create() {
+SHDPTR(HanalApi) HanalApi::create() {
   return std::make_shared<HanalImpl>();
 }
 

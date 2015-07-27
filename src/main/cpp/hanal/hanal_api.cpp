@@ -18,12 +18,13 @@
 #include "boost/lexical_cast.hpp"
 #include "hanal/Except.hpp"
 #include "hanal/HanalApi.hpp"
+#include "hanal/macro.hpp"
 
 
 ///////////////
 // variables //
 ///////////////
-std::vector<std::shared_ptr<hanal::HanalApi>> _handles{ hanal::HanalApi::create() };    // handles
+SHDPTRVEC(hanal::HanalApi) _handles{ hanal::HanalApi::create() };    // handles
 std::recursive_mutex _mutex;    // mutex to exclusively access handles
 
 
@@ -40,7 +41,7 @@ int hanal_open(const char* rsc_dir, const char* opt_str) {
   auto hanal_api = hanal::HanalApi::create();
   try {
     hanal_api->open(rsc_dir, opt_str);
-    _handles.push_back(hanal_api);
+    _handles.emplace_back(hanal_api);
   } catch (hanal::Except& exc) {
     return -1;
     // TODO(krikit): there should be method to notice error message
