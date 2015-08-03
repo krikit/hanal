@@ -42,12 +42,12 @@ enum class SejongTag: int {
   NP,        ///< pronoun; 체언 - 대명사
   NR,        ///< numeral; 체언 - 수사
   NV,        ///< symbol - verb estimation; 기호 - 동사추정범주
-  SE,        ///< symbol - ellipsis; 기호 - 줄임표
+  SE,        ///< symbol - ellipsis; 기호 - 줄임표…
   SF,        ///< symbol - period, question/exclamation mark; 기호 - 마침표, 물음표, 느낌표
   SH,        ///< symbol - Chinese; 기호 - 한자
   SL,        ///< symbol - foreign letter; 기호 - 외국어
   SN,        ///< symbol - number; 기호 - 숫자
-  SO,        ///< symbol - tilde, O mark; 기호 - 붙임표(물결, 숨김, 빠짐)
+  SO,        ///< symbol - tilde, O mark; 기호 - 붙임표(물결~, 숨김○, 빠짐□)
   SP,        ///< symbol - comma, dot, colon, slash; 기호 - 쉼표, 가운뎃점, 콜론, 빗금
   SS,        ///< symbol - quote, parentheses, dash; 기호 - 따옴표, 괄호, 줄표
   SW,        ///< symbol - etc; 기호 - 기타 기호(수학 논리기호, 화폐 기호 등)

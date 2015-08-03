@@ -22,6 +22,12 @@ namespace hanal {
 
 
 ////////////////////
+// static members //
+////////////////////
+const std::wstring Char::SPACE = L" \t\v\r\n\u3000";
+
+
+////////////////////
 // ctors and dtor //
 ////////////////////
 Char::Char(wchar_t wchar_, const char* start_, const char* end_)
@@ -52,7 +58,106 @@ SHDPTRVEC(Char) Char::characterize(const char* text) {
 
 
 bool Char::is_space() {
+  return is_space(wchar);
+}
+
+
+bool Char::is_space(wchar_t wchar) {
   return SPACE.find(wchar) != std::wstring::npos;
+}
+
+
+bool Char::is_hangul(wchar_t wchar) {
+  if (L'\uAC00' <= wchar && wchar <= L'\uD7AF') return true;    // Hangul syllables
+  if (L'\u1100' <= wchar && wchar <= L'\u11FF') return true;    // Hangul jamo (consonants and vowels)
+  return false;
+}
+
+
+bool Char::is_latin(wchar_t wchar) {
+  if (L'A' <= wchar && wchar <= L'Z') return true;
+  if (L'\uFF21' <= wchar && wchar <= L'\uFF3A') return true;    // full-width upper case alphabets
+  if (L'a' <= wchar && wchar <= L'z') return true;
+  if (L'\uFF41' <= wchar && wchar <= L'\uFF5A') return true;    // full-width lower case alphabets
+  // Latin-1 supplement
+  if (L'\u00C0' <= wchar && wchar <= L'\u00FF' && wchar != L'\u00D7' && wchar != L'\u00F7') return true;
+  return false;
+}
+
+
+bool Char::is_number(wchar_t wchar) {
+  if (L'0' <= wchar && wchar <= L'9') return true;
+  if (L'\uFF10' <= wchar && wchar <= L'\uFF19') return true;    // full-width numbers
+  return false;
+}
+
+
+bool Char::is_cjk(wchar_t wchar) {
+  if (L'\u4E00' <= wchar && wchar <= L'\u9FD5') return true;    // CJK unified ideographs
+  if (L'\uF900' <= wchar && wchar <= L'\uFAD9') return true;    // CJK compatibility ideographs
+  if (L'\u2F00' <= wchar && wchar <= L'\u2FDF') return true;    // CJK radicals
+  return false;
+}
+
+
+bool Char::is_foreign(wchar_t wchar) {
+  return !is_space(wchar) && !is_hangul(wchar) && !is_latin(wchar) && !is_number(wchar) && !is_cjk(wchar)
+      && !is_ellipsis(wchar) && !is_period(wchar) && !is_o_mark(wchar) && !is_comma(wchar) && !is_quote(wchar)
+      && !is_symbol(wchar);
+}
+
+
+bool Char::is_ellipsis(wchar_t wchar) {
+  if (wchar == L'\u2026') return true;    // …
+  return false;
+}
+
+
+bool Char::is_period(wchar_t wchar) {
+  if (wchar == L'.' || wchar == L'\uFF0E' || wchar == L'\uFF61') return true;    // .．｡
+  if (wchar == L'?' || wchar == L'\uFF1F') return true;    // ?？
+  if (wchar == L'!' || wchar == L'\uFF01') return true;    // !！
+  return false;
+}
+
+
+bool Char::is_o_mark(wchar_t wchar) {
+  if (wchar == L'~' || wchar == L'\uFF5E') return true;    // ~
+  if (wchar == L'\u25CB' || wchar == L'\u25EF') return true;    // ○◯
+  if (wchar == L'\u25A1') return true;    // □
+  return false;
+}
+
+
+bool Char::is_comma(wchar_t wchar) {
+  if (wchar == L',' || wchar == L'\uFF0C' || wchar == L'\uFF64') return true;    // ,，､
+  if (wchar == L'\uFF65') return true;    // ･ (middle dot)
+  if (wchar == L':' || wchar == L'\uFF1A') return true;    // :：
+  if (wchar == L';' || wchar == L'\uFF1B') return true;    // ;；
+  if (wchar == L'/' || wchar == L'\uFF0F') return true;    // /／
+  return false;
+}
+
+
+bool Char::is_quote(wchar_t wchar) {
+  if (wchar == L'\'' || wchar == L'\uFF07' || wchar == L'\u2018' || wchar == L'\u2019') return true;    // '＇‘’
+  if (wchar == L'"' || wchar == L'\uFF02' || wchar == L'\u201C' || wchar == L'\u201D') return true;    // "＂“”
+  if (wchar == L'-' || wchar == L'\uFF0D') return true;    // -－
+  if (wchar == L'(' || wchar == L')' || wchar == L'\uFF08' || wchar == L'\uFF09') return true;    // ()（）
+  if (wchar == L'[' || wchar == L']' || wchar == L'\uFF3B' || wchar == L'\uFF3D') return true;    // []［］
+  if (wchar == L'{' || wchar == L'}' || wchar == L'\uFF5B' || wchar == L'\uFF5D') return true;    // {}｛｝
+  if (wchar == L'<' || wchar == L'>' || wchar == L'\uFF1C' || wchar == L'\uFF1E') return true;    // <>＜＞
+  return false;
+}
+
+
+bool Char::is_symbol(wchar_t wchar) {
+  if (wcschr(L"`@#$%^&*_=+|\\", wchar) != nullptr) return true;
+  if (wcschr(L"\uFF03\uFF04\uFF05\uFF06\uFF0A\uFF0B\uFF1D\uFF20\uFF3C\uFF3E\uFF3F\uFF40\uFF5C", wchar) != nullptr) {
+    //           ＃    ＄     ％    ＆    ＊     ＋    ＝     ＠    ＼    ＾     ＿    ｀    ｜
+    return true;
+  }
+  return false;
 }
 
 
