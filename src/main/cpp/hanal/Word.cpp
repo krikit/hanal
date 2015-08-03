@@ -70,10 +70,11 @@ int Word::char_len(const SHDPTRVEC(Word)& words) {
 
 
 std::wstring Word::to_wstr() {
-  std::wstring text;
-  std::transform(chars.begin(), chars.end(), text.begin(),
-                 [](const SHDPTR(Char)& char_) { return char_->wchar; });
-  return text;
+  std::wostringstream wss;
+  for (auto& char_ : chars) {
+    wss << char_->wchar;
+  }
+  return wss.str();
 }
 
 
