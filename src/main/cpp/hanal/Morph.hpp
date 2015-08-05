@@ -27,10 +27,12 @@ namespace hanal {
  */
 class Morph {
  public:
-  Morph(const wchar_t* lex_, SejongTag tag_);    ///< ctor
-
-  const wchar_t* lex = nullptr;    ///< lexical form
   SejongTag tag = SejongTag::_SIZE;    ///< part-of-speech tag
+
+  explicit Morph(const wchar_t* lex, SejongTag tag_);    ///< ctor
+  explicit Morph(std::unique_ptr<wchar_t[]>&& lex, SejongTag tag_);    ///< ctor, NOLINT
+
+  const wchar_t* lex();    ///< get lexical form
 
   /**
    * @brief             parse morpheme
@@ -52,6 +54,10 @@ class Morph {
    * @return                  vector of analysis results
    */
   static std::vector<SHDPTRVEC(Morph)> parse_anal_result_vec(wchar_t* anal_results_str);
+
+ private:
+  const wchar_t* _lex = nullptr;    ///< lexical form from morpheme dic
+  std::unique_ptr<wchar_t[]> _lex_cpy;    ///< copied lexical form for estimated morpheme
 };
 
 

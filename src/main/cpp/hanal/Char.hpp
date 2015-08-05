@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "hanal/macro.hpp"
+#include "hanal/SejongTag.hpp"
 
 
 namespace hanal {
@@ -43,12 +44,17 @@ class Char {
     SYMBOL    ///< other symbols (SW)
   };
 
+  enum class MergeStrategy : int {    ///< character merge strategy when estimating unknown words
+    SEPARATELY = 0,
+    BY_TYPE,
+    BY_CHAR
+  };
+
   static const std::wstring SPACE;    ///< space characters
 
   wchar_t wchar = L'\0';    ///< converted wide character
   const char* start = nullptr;    ///< start position (zero based, inclusive) of original UTF-8 text
   const char* end = nullptr;    ///< end position (exclusive) of original UTF-8 text
-  Type type = Type::UNK;    ///< character type
 
   Char(wchar_t wchar_, const char* start_, const char* end_);    ///< ctor
 
@@ -60,6 +66,27 @@ class Char {
   static SHDPTRVEC(Char) characterize(const char* text);
 
   bool is_space();    ///< whether is space or not
+  Type type();    ///< get character type
+
+  /**
+   * @brief        get character merge strategy when estimating unknown words
+   * @param  type  character type
+   * @return       strategy
+   */
+  static MergeStrategy merge_strategy(Type type);
+
+  /**
+   * @brief   get estimated part-of-speech tag
+   * @return  part-of-speech tag
+   */
+  SejongTag estimate_pos_tag();
+
+  /**
+   * @brief        get part-of-speech tag with character type
+   * @param  type  character type
+   * @return       part-of-speech tag
+   */
+  static SejongTag estimate_pos_tag(Type type);
 
   static bool is_space(wchar_t wchar);    ///< whether is space or not
   static bool is_hangul(wchar_t wchar);    ///< whether is Hangul or not
@@ -73,6 +100,9 @@ class Char {
   static bool is_comma(wchar_t wchar);    ///< whether is comma or not
   static bool is_quote(wchar_t wchar);    ///< whether is quote or not
   static bool is_symbol(wchar_t wchar);    ///< whether is symbol or not
+
+ private:
+  Type _type = Type::UNK;    ///< character type
 };
 
 

@@ -12,8 +12,8 @@
 // includes //
 //////////////
 #include <memory>
+#include <set>
 #include <string>
-#include <vector>
 
 #include "hanal/macro.hpp"
 
@@ -86,6 +86,25 @@ class Word {
    * @return       merged (new) word
    */
   Word operator+(const Word& that);
+
+ private:
+  /**
+   * @brief                unknown word estimation (forward)
+   * @param  trellis       Viterbi trellis
+   * @param  trellis_idx   trellis index to add estimated results
+   * @param  lookup_start  start position of lookup
+   * @return               set of match lengths
+   */
+  std::set<int> _estimate_unk_word_forward(ViterbiTrellis* trellis, int trellis_idx, int lookup_start);
+
+  /**
+   * @brief                add estimated unknown word
+   * @param  trellis       Viterbi trellis
+   * @param  trellis_idx   trellis index to add estimated results
+   * @param  lookup_start  start position of lookup
+   * @param  length        length of unknown word from start position
+   */
+  void _add_unk_word(ViterbiTrellis* trellis, int trellis_idx, int lookup_start, int length);
 };
 
 

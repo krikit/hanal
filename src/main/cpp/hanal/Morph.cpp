@@ -23,13 +23,26 @@ namespace hanal {
 ////////////////////
 // ctors and dtor //
 ////////////////////
-Morph::Morph(const wchar_t* lex_, SejongTag tag_) : lex(lex_), tag(tag_) {
+Morph::Morph(const wchar_t* lex, SejongTag tag_) : _lex(lex), tag(tag_) {
+}
+
+
+Morph::Morph(std::unique_ptr<wchar_t[]>&& lex, SejongTag tag_) : _lex_cpy(std::move(lex)), tag(tag_) {    // NOLINT
 }
 
 
 /////////////
 // methods //
 /////////////
+const wchar_t* Morph::lex() {
+  if (_lex != nullptr) {
+    return _lex;
+  } else {
+    return _lex_cpy.get();
+  }
+}
+
+
 SHDPTR(Morph) Morph::parse(wchar_t* morph_str) {
   wchar_t* found = wcsrchr(morph_str, L'/');
   HANAL_ASSERT(found != nullptr, "Invalid morpheme format: " + Util::to_utf8(morph_str));

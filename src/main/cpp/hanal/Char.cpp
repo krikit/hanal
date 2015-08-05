@@ -58,7 +58,84 @@ SHDPTRVEC(Char) Char::characterize(const char* text) {
 
 
 bool Char::is_space() {
-  return is_space(wchar);
+  if (is_space(wchar)) _type = Type::SPACE;
+  return _type == Type::SPACE;
+}
+
+
+Char::Type Char::type() {
+  if (_type == Type::UNK) {
+    if (is_space(wchar)) {
+      _type = Type::SPACE;
+    } else if (is_hangul(wchar)) {
+      _type = Type::HANGUL;
+    } else if (is_latin(wchar)) {
+      _type = Type::LATIN;
+    } else if (is_number(wchar)) {
+      _type = Type::NUMBER;
+    } else if (is_cjk(wchar)) {
+      _type = Type::CJK;
+    } else if (is_ellipsis(wchar)) {
+      _type = Type::ELLIPSIS;
+    } else if (is_period(wchar)) {
+      _type = Type::PERIOD;
+    } else if (is_o_mark(wchar)) {
+      _type = Type::O_MARK;
+    } else if (is_comma(wchar)) {
+      _type = Type::COMMA;
+    } else if (is_quote(wchar)) {
+      _type = Type::QUOTE;
+    } else if (is_symbol(wchar)) {
+      _type = Type::SYMBOL;
+    } else {
+      _type = Type::FOREIGN;
+    }
+  }
+  return _type;
+}
+
+
+Char::MergeStrategy Char::merge_strategy(Type type) {
+  if (type == Type::COMMA || type == Type::QUOTE || type == Type::SYMBOL) {
+    return MergeStrategy::SEPARATELY;
+  } else if (type == Type::PERIOD || type == Type::ELLIPSIS || type == Type::O_MARK) {
+    return MergeStrategy::BY_CHAR;
+  } else {
+    // SPACE, HANGUL, LATIN, NUMBER, CJK, FOREIGN
+    return MergeStrategy::BY_TYPE;
+  }
+}
+
+
+SejongTag Char::estimate_pos_tag() {
+  return estimate_pos_tag(type());
+}
+
+
+SejongTag Char::estimate_pos_tag(Type type) {
+  if (type == Type::HANGUL) {
+    return SejongTag::NNG;
+  } else if (type == Type::LATIN || type == Type::FOREIGN) {
+    return SejongTag::SL;
+  } else if (type == Type::NUMBER) {
+    return SejongTag::SN;
+  } else if (type == Type::CJK) {
+    return SejongTag::SH;
+  } else if (type == Type::ELLIPSIS) {
+    return SejongTag::SE;
+  } else if (type == Type::PERIOD) {
+    return SejongTag::SF;
+  } else if (type == Type::O_MARK) {
+    return SejongTag::SO;
+  } else if (type == Type::COMMA) {
+    return SejongTag::SP;
+  } else if (type == Type::QUOTE) {
+    return SejongTag::SS;
+  } else if (type == Type::SYMBOL) {
+    return SejongTag::SW;
+  } else {
+    HANAL_THROW("Character type is unknown or space!");
+  }
 }
 
 
