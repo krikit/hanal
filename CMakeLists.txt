@@ -15,6 +15,7 @@ if (NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 if (GCOV)
+  message(STATUS "gcov option enabled")
   set(CMAKE_BUILD_TYPE "Debug")
   add_definitions(
     -fprofile-arcs
