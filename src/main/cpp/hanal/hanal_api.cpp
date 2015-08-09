@@ -37,6 +37,10 @@ const char* hanal_version() {
 
 
 int hanal_open(const char* rsc_dir, const char* opt_str) {
+  if (rsc_dir == nullptr) {
+    // TODO(krikit): there should be method to notice error message
+    return -1;
+  }
   std::unique_lock<std::recursive_mutex> lock(_mutex);
   auto hanal_api = hanal::HanalApi::create();
   try {
@@ -46,7 +50,7 @@ int hanal_open(const char* rsc_dir, const char* opt_str) {
     return -1;
     // TODO(krikit): there should be method to notice error message
   }
-  return static_cast<int>(_handles.size());
+  return static_cast<int>(_handles.size() - 1);
 }
 
 
@@ -57,7 +61,14 @@ void hanal_close(int handle) {
 
 
 const char* hanal_pos_tag(int handle, const char* sent, const char* opt_str) {
-  HANAL_ASSERT(handle > 0 && handle < _handles.size(), "Invalid handle" + boost::lexical_cast<std::string>(handle));
+  if (handle <= 0 || handle >= _handles.size()) {
+    // TODO(krikit): there should be method to notice error message
+    return nullptr;
+  }
+  if (sent == nullptr) {
+    // TODO(krikit): there should be method to notice error message
+    return nullptr;
+  }
   auto hanal_api = _handles[handle];
   return hanal_api->pos_tag(sent, opt_str).c_str();
 }

@@ -15,9 +15,16 @@
 #include <string>
 
 #include "hanal/HanalApi.hpp"
+#include "hanal/macro.hpp"
 
 
 namespace hanal {
+
+
+class MorphDic;
+class Option;
+class StateFeatDic;
+class TransMat;
 
 
 /**
@@ -25,6 +32,7 @@ namespace hanal {
  */
 class HanalImpl: public HanalApi {
  public:
+  HanalImpl();    ///< ctor
   virtual ~HanalImpl();    ///< dtor
 
   /**
@@ -46,6 +54,10 @@ class HanalImpl: public HanalApi {
 
  private:
   std::recursive_mutex _mutex;    ///< mutex to access API methods exclusively
+  SHDPTR(Option) _option;    ///< option
+  SHDPTR(MorphDic) _morph_dic;    ///< morpheme dictionary
+  SHDPTR(StateFeatDic) _state_feat_dic;    ///< state-feature dictionary
+  SHDPTR(TransMat) _trans_mat;    ///< transition matrix
 };
 
 
