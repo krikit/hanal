@@ -85,7 +85,7 @@ class Word {
    * @param  that  that word
    * @return       merged (new) word
    */
-  Word operator+(const Word& that);
+  Word& operator+=(const Word& that);
 
  private:
   /**

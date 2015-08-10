@@ -18,6 +18,8 @@
 #include "hanal/Option.hpp"
 #include "hanal/StateFeatDic.hpp"
 #include "hanal/TransMat.hpp"
+#include "hanal/ViterbiTrellis.hpp"
+#include "hanal/Word.hpp"
 
 
 namespace hanal {
@@ -63,7 +65,18 @@ void HanalImpl::close() {
 
 const std::string& HanalImpl::pos_tag(const char* sent, const char* opt_str) {
   std::unique_lock<std::recursive_mutex> lock(_mutex);
-  HANAL_THROW("Not implemented yet!");
+  Option runtime_opt = _option->override(opt_str);
+  auto words = Word::tokenize(sent);
+  ViterbiTrellis trellis(words);
+  for (int idx = 0; idx < words.size(); ++idx) {
+    auto merged_word = *words[idx];
+    for (int merge_num = 1; merge_num < runtime_opt.word_merge; ++merge_num) {
+      merged_word += *words[idx + merge_num];
+    }
+    merged_word.analyze_forward(_morph_dic.get(), &trellis, merged_word.char_idx);
+    // if (runtime_opt.anal_back) merged_word.analyze_backward(_morph_dic.get(), &trellis, merged_word.char_idx);
+  }
+  return std::string();    ///< TODO(krikit): return reference to the internal string buffer
 }
 
 

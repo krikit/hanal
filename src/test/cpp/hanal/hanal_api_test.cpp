@@ -34,3 +34,14 @@ TEST(hanal_api, hanal_open_close) {
   EXPECT_GT(0, hanal_open((rsc_dir + "/__not_existing_dir__").c_str(), ""));
   EXPECT_GT(0, hanal_open(nullptr, ""));
 }
+
+
+TEST(hanal_api, hanal_pos_tag) {
+  std::string rsc_dir = prog_args["rsc-dir"];
+  int handle = hanal_open(rsc_dir.c_str(), "");
+
+  const char* sent1 = u8"아버지가방에들어가신다.";
+  const char* result1 = hanal_pos_tag(handle, sent1, "");
+
+  hanal_close(handle);
+}

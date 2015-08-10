@@ -167,11 +167,10 @@ void Word::analyze_backward(MorphDic* morph_dic, ViterbiTrellis* trellis, int tr
 }
 
 
-Word Word::operator+(const Word& that) {
+Word& Word::operator+=(const Word& that) {
   HANAL_ASSERT(this->char_idx + this->chars.size() == that.char_idx, "Can merge only adjacent words");
-  Word merged(*this);
-  merged.chars.insert(merged.chars.end(), that.chars.begin(), that.chars.end());
-  return merged;
+  chars.insert(chars.end(), that.chars.begin(), that.chars.end());
+  return *this;
 }
 
 

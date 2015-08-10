@@ -23,14 +23,17 @@ namespace hanal {
  */
 class Option {
  public:
+  int word_merge = 1;    ///< word merge count. default: 1
+  bool anal_back = true;    ///< analyze backward. default: true
+
   explicit Option(std::string opt_str);    ///< ctor
 
-  int word_merge();    ///< get word_merge option value
-  bool anal_back();    ///< get anal_back option value
-
- private:
-  int _word_merge = 1;    ///< word merge count. default: 1
-  bool _anal_back = true;    ///< analyze backward. default: true
+  /**
+   * @brief           run-time override option
+   * @param  opt_str  run-time option
+   * @return          overrided option
+   */
+  Option override(std::string opt_str);
 };
 
 

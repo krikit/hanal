@@ -25,4 +25,13 @@ Option::Option(std::string opt_str) {
 }
 
 
+/////////////
+// methods //
+/////////////
+Option Option::override(std::string opt_str) {
+  // TODO(krikit): parse option string and return overrided options
+  return *this;
+}
+
+
 }    // namespace hanal
