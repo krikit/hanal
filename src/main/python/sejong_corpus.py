@@ -256,7 +256,7 @@ def load(is_spoken, paths):
         sent = Sentence()
         continue
       elif Sentence.is_closing(is_spoken, line):
-        if sent:
+        if sent and sent.is_good_tags():
           yield sent
         sent = None
         continue

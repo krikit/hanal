@@ -54,7 +54,7 @@ def main(fin, output_stem):
   trie_root = trie.Node()
   for syllable in sorted(syll_morph_dic.keys()):
     morphs = sorted(list(syll_morph_dic[syllable]))
-    trie_root.insert(syllable, u'\t'.join(morphs))
+    trie_root.insert(syllable, _ANAL_RESULT_DELIM.join(morphs))
 
   fout_key = open('%s.trie' % output_stem, 'wb')
   fout_val = open('%s.val' % output_stem, 'w')
