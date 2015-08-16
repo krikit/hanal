@@ -40,8 +40,9 @@ TEST(hanal_api, hanal_pos_tag) {
   std::string rsc_dir = prog_args["rsc-dir"];
   int handle = hanal_open(rsc_dir.c_str(), "");
 
-  const char* sent1 = u8"아버지가방에들어가신다.";
+  const char* sent1 = u8"아버지 가방에들어 가신다.";
   const char* result1 = hanal_pos_tag(handle, sent1, "");
+  std::cerr << result1 << std::endl;
 
   hanal_close(handle);
 }

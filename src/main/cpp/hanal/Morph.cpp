@@ -11,6 +11,8 @@
 // includes //
 //////////////
 #include <cwchar>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "hanal/Except.hpp"
@@ -76,6 +78,23 @@ std::vector<SHDPTRVEC(Morph)> Morph::parse_anal_result_vec(wchar_t* anal_results
   }
   anal_results.emplace_back(parse_anal_result(start));
   return anal_results;
+}
+
+
+std::string Morph::str() {
+  std::ostringstream oss;
+  oss << Util::to_utf8(lex()) << "/" << Util::to_utf8(Util::from_sejong(tag));
+  return oss.str();
+}
+
+
+std::string Morph::str(const SHDPTRVEC(Morph)& anal_result) {
+  std::ostringstream oss;
+  for (auto& morph : anal_result) {
+    if (oss.str().length() > 0) oss << " + ";
+    oss << morph->str();
+  }
+  return oss.str();
 }
 
 

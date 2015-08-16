@@ -55,6 +55,15 @@ class Morph {
    */
   static std::vector<SHDPTRVEC(Morph)> parse_anal_result_vec(wchar_t* anal_results_str);
 
+  std::string str();    ///< get string for debugging
+
+  /**
+   * @brief               get string of vector of morphems for debugging
+   * @param  anal_result  analysis result (vector of morphems)
+   * @return              string
+   */
+  static std::string str(const SHDPTRVEC(Morph)& anal_result);
+
  private:
   const wchar_t* _lex = nullptr;    ///< lexical form from morpheme dic
   std::unique_ptr<wchar_t[]> _lex_cpy;    ///< copied lexical form for estimated morpheme

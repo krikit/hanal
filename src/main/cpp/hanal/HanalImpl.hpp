@@ -11,6 +11,7 @@
 //////////////
 // includes //
 //////////////
+#include <list>
 #include <mutex>    // NOLINT
 #include <string>
 
@@ -58,6 +59,10 @@ class HanalImpl: public HanalApi {
   SHDPTR(MorphDic) _morph_dic;    ///< morpheme dictionary
   SHDPTR(StateFeatDic) _state_feat_dic;    ///< state-feature dictionary
   SHDPTR(TransMat) _trans_mat;    ///< transition matrix
+
+  static const int _CACHE_MAX = 1000;    ///< max number of cache
+  std::list<std::string> _str_buf;    ///< string buffer for caching
+  const std::string& _cache(std::string str);    ///< cache string in internal buffer
 };
 
 

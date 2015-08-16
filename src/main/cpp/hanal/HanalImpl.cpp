@@ -76,7 +76,14 @@ const std::string& HanalImpl::pos_tag(const char* sent, const char* opt_str) {
     merged_word.analyze_forward(_morph_dic.get(), &trellis, merged_word.char_idx);
     // if (runtime_opt.anal_back) merged_word.analyze_backward(_morph_dic.get(), &trellis, merged_word.char_idx);
   }
-  return std::string();    ///< TODO(krikit): return reference to the internal string buffer
+  return _cache(trellis.str());    ///< TODO(krikit): return reference to the internal string buffer
+}
+
+
+const std::string& HanalImpl::_cache(std::string str) {
+  _str_buf.emplace_back(std::move(str));
+  if (_str_buf.size() > _CACHE_MAX) _str_buf.pop_front();
+  return _str_buf.back();
 }
 
 

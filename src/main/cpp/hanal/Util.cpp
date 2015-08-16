@@ -13,6 +13,8 @@
 #include <map>
 #include <string>
 
+#include "boost/lexical_cast.hpp"
+#include "boost/locale.hpp"
 #include "hanal/Except.hpp"
 
 
@@ -36,13 +38,20 @@ std::map<std::wstring, SejongTag> Util::_to_sejong_map = {
     {L"XPN", SejongTag::XPN}, {L"XR", SejongTag::XR}, {L"XSA", SejongTag::XSA}, {L"XSN", SejongTag::XSN},
     {L"XSV", SejongTag::XSV}
 };
+std::array<const wchar_t*, static_cast<size_t>(SejongTag::_SIZE)> Util::_from_sejong_arr = {
+    L"EC", L"EF", L"EP", L"ETM", L"ETN", L"IC", L"JC", L"JKB", L"JKC", L"JKG",
+    L"JKO", L"JKQ", L"JKS", L"JKV", L"JX", L"MAG", L"MAJ", L"MM", L"NA", L"NF",
+    L"NNB", L"NNG", L"NNP", L"NP", L"NR", L"NV", L"SE", L"SF", L"SH", L"SL",
+    L"SN", L"SO", L"SP", L"SS", L"SW", L"VA", L"VCN", L"VCP", L"VV", L"VX",
+    L"XPN", L"XR", L"XSA", L"XSN", L"XSV"
+};
 
 
+/////////////
 // methods //
 /////////////
 std::string Util::to_utf8(const wchar_t* wstr) {
-  HANAL_THROW("Wide string to UTF-8 converting method is not implemented yet!");
-  // TODO(krikit): implement converting from wide string to utf8 string
+  return boost::locale::conv::utf_to_utf<char>(wstr);
 }
 
 
@@ -55,6 +64,13 @@ SejongTag Util::to_sejong(const wchar_t* tag) {
   auto found = _to_sejong_map.find(tag);
   HANAL_ASSERT(found != _to_sejong_map.end(), "Unknown tag: " + to_utf8(tag));
   return found->second;
+}
+
+
+const wchar_t* Util::from_sejong(SejongTag sejong) {
+  HANAL_ASSERT(SejongTag(0) <= sejong && sejong < SejongTag::_SIZE,
+               "Invalid sejong tag: " + boost::lexical_cast<std::string>(static_cast<int>(sejong)));
+  return _from_sejong_arr[static_cast<size_t>(sejong)];
 }
 
 

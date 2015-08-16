@@ -38,14 +38,22 @@ class Util {
   static std::string to_utf8(const std::wstring& wstr);
 
   /**
-   * @brief       convert string part-of-speech tag to SejongTag
+   * @brief       convert from string part-of-speech tag to SejongTag
    * @param  tag  part-of-speech tag
    * @return      SejongTag
    */
   static SejongTag to_sejong(const wchar_t* tag);
 
+  /**
+   * @brief          convert SejongTag to string part-of-speech tag
+   * @param  sejong  SejongTag
+   * @return         part-of-speech tag
+   */
+  static const wchar_t* from_sejong(SejongTag sejong);
+
  private:
   static std::map<std::wstring, SejongTag> _to_sejong_map;    ///< string tag to int tag map
+  static std::array<const wchar_t*, static_cast<size_t>(SejongTag::_SIZE)> _from_sejong_arr;    ///< string tags
 };
 
 
