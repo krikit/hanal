@@ -3,6 +3,10 @@ hanal
 Hangul ANALyzer.
 Yet another Korean morphological analysis and part-of-speech tagging system.
 
+Notice
+------
+**This project will no longer be continued since I started another project, named [khaiii](https://github.com/kakao/khaiii).**
+
 
 Dependents
 ----------
